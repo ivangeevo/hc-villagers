@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.ivangeevo.hcVillagers.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BuyItemFactoryAccessor",
+    "VillagerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
