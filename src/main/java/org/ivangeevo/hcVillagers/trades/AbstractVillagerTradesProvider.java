@@ -28,6 +28,7 @@ public abstract class AbstractVillagerTradesProvider {
         }
     }
 
+    // bandaid for until (or if) we decide to rework the required count of ingredients for village trades
     // Returns the average value between the two numbers passed
     protected static int arithmeticMean(int a, int b) {
         return (a + b) / 2;
