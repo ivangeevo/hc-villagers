@@ -1,24 +1,12 @@
 package org.ivangeevo.hcVillagers.trades;
 
-import btwr.core.item.BTWR_Items;
 import com.bwt.blocks.BwtBlocks;
-import com.bwt.items.BwtItems;
-import com.google.common.collect.ImmutableMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.provider.TradeRebalanceEnchantmentProviders;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Items;
-import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.village.TradeOffers;
-import net.minecraft.village.VillagerProfession;
 import org.ivangeevo.animageddon.item.ModItems;
 import org.ivangeevo.btwr_ds.item.BTWRDS_Items;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ModLibrarianTrades extends AbstractVillagerTradesProvider {
 
@@ -50,14 +38,14 @@ public class ModLibrarianTrades extends AbstractVillagerTradesProvider {
     };
 
     private static final TradeOffers.Factory[] LEVEL_4_TRADES = {
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.detectorBlock, Items.DISPENSER), arithmeticMean(4,8), 12, 20),
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.lensBlock, Items.DAYLIGHT_DETECTOR), arithmeticMean(4,8), 12, 20),
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.buddyBlock, Items.OBSERVER), arithmeticMean(4,8), 12, 20),
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.blockDispenserBlock, Items.STICKY_PISTON), arithmeticMean(4,8), 12, 20),
+            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.detectorBlock.asItem(), Items.DISPENSER), arithmeticMean(4,8), 12, 20),
+            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.lensBlock.asItem(), Items.DAYLIGHT_DETECTOR), arithmeticMean(4,8), 12, 20),
+            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.buddyBlock.asItem(), Items.OBSERVER), arithmeticMean(4,8), 12, 20),
+            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.blockDispenserBlock.asItem(), Items.STICKY_PISTON), arithmeticMean(4,8), 12, 20),
     };
 
     private static final TradeOffers.Factory[] LEVEL_5_TRADES = {
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.bloodWoodBlocks.saplingItem, Items.CRIMSON_FUNGUS), arithmeticMean(8,16), 12, 20),
+            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.bloodWoodBlocks.saplingItem.asItem(), Items.CRIMSON_FUNGUS), arithmeticMean(8,16), 12, 20),
             //new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.netherGrothSpores, Items.WARPED_FUNGUS), arithmeticMean(8,16), 12, 20),
             new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BTWRDS_Items.BRIMSTONE, Items.GUNPOWDER), arithmeticMean(16,32), 12, 20),
             //new TradeOffers.SellItemFactory(getOptionalItem(BWT, BwtItems.arcaneScrollPower, Items.GUNPOWDER).asItem(), arithmeticMean(32,48), 12, 20),
