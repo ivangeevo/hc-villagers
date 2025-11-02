@@ -1,8 +1,6 @@
 package org.ivangeevo.hc_villagers.trades;
 
 import btwr.core.item.BTWR_Items;
-import com.bwt.blocks.BwtBlocks;
-import com.bwt.items.BwtItems;
 import ivangeevo.sturdy_trees.item.SturdyTreesItems;
 import net.minecraft.item.Items;
 import net.minecraft.village.TradeOffers;
@@ -29,10 +27,10 @@ public class ModFarmerTrades extends AbstractVillagerTradesProvider {
 
     private static final TradeOffers.Factory[] LEVEL_2_TRADES = {
             new TradeOffers.BuyItemFactory(Items.MILK_BUCKET, 1, 12, 10,2),
-            new TradeOffers.BuyItemFactory(getOptionalItem(BTWR, BwtItems.hempSeedsItem, Items.WHEAT_SEEDS), arithmeticMean(24,32), 4, 5),
+            //new TradeOffers.BuyItemFactory(getOptionalItem(BTWR, BwtItems.hempSeedsItem, Items.WHEAT_SEEDS), arithmeticMean(24,32), 4, 5),
             new TradeOffers.BuyItemFactory(Items.SUGAR, arithmeticMean(10,20), 8, 5),
             new TradeOffers.BuyItemFactory(Items.COCOA_BEANS, arithmeticMean(10,16), 4, 5),
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtItems.flourItem, Items.WHEAT), arithmeticMean(24,32), 8, 5),
+            //new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtItems.flourItem, Items.WHEAT), arithmeticMean(24,32), 8, 5),
             new TradeOffers.BuyItemFactory(Items.BROWN_MUSHROOM, arithmeticMean(10,16), 8, 5),
             new TradeOffers.BuyItemFactory(Items.GLASS_PANE, arithmeticMean(16,32), 8, 5),
             new TradeOffers.BuyItemFactory(Items.EGG, 12, 4, 5),
@@ -56,8 +54,8 @@ public class ModFarmerTrades extends AbstractVillagerTradesProvider {
     };
 
     private static final TradeOffers.Factory[] LEVEL_4_TRADES = {
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtItems.cementBucketItem, Items.LAVA_BUCKET), 1, 3, 12, 15),
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.lightBlockBlock, Items.REDSTONE_LAMP), arithmeticMean(2,4), 1, 12, 15),
+            //new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtItems.cementBucketItem, Items.LAVA_BUCKET), 1, 3, 12, 15),
+            //new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.lightBlockBlock, Items.REDSTONE_LAMP), arithmeticMean(2,4), 1, 12, 15),
 
             new TradeOffers.SellItemFactory(Items.PUMPKIN_PIE, arithmeticMean(1,2), 1, 8, 15),
             new TradeOffers.SellItemFactory(Items.COOKIE, arithmeticMean(8,16), 1, 8, 15),

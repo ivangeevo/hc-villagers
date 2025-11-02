@@ -65,27 +65,42 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
         return 1;
     }
 
-    @Inject(method = "fillRecipes", at = @At("TAIL"))
-    private void afterFillRecipes(CallbackInfo ci) {
+    // Not working properly
+    // Tried to make it so that only the last offer in the list gives xp to the villager.
+    //@Inject(method = "afterUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/random/Random;nextInt(I)I", shift = At.Shift.AFTER), cancellable = true)
+    private void beforeSetExperience(TradeOffer offer, CallbackInfo ci) {
+        VillagerEntity villager = (VillagerEntity)(Object)this;
 
-    }
+        VillagerData data = villager.getVillagerData();
+        int villagerLevel = data.getLevel();
+        VillagerProfession profession = data.getProfession();
 
-   //@Inject(method = "fillRecipes", at = @At("HEAD"), cancellable = true)
-    private void fillAllOffers(CallbackInfo ci) {
-        VillagerData data = this.getVillagerData();
-        Int2ObjectMap<TradeOffers.Factory[]> poolMap = TradeOffers.PROFESSION_TO_LEVELED_TRADE.get(data.getProfession());
-        if (poolMap == null) return;
+        TradeOfferList offers = villager.getOffers();
+        int offerIndex = offers.indexOf(offer);
+        if (offerIndex == -1) return; // shouldn't happen
 
-        TradeOfferList offers = this.getOffers();
-        poolMap.forEach((level, factories) -> {
-            // Instead of picking 2 random ones, take every valid factory result.
-            for (TradeOffers.Factory factory : factories) {
-                TradeOffer offer = factory.create(this, this.random);
-                if (offer != null && !offers.contains(offer))
-                    offers.add(offer);
+        Int2ObjectMap<TradeOffers.Factory[]> profMap =
+                TradeOffers.PROFESSION_TO_LEVELED_TRADE.get(profession);
+        if (profMap == null) return;
+
+        // Find the level that this offer index falls into
+        int cumulative = 0;
+        int offerLevel = 1;
+        for (int level = 1; level <= 5; level++) {
+            TradeOffers.Factory[] factories = profMap.get(level);
+            if (factories == null) continue;
+            cumulative += factories.length;
+            if (offerIndex < cumulative) {
+                offerLevel = level;
+                break;
             }
-        });
-        ci.cancel(); // prevents vanilla from running its original logic
+        }
+
+        if (offerLevel != villagerLevel) {
+            // Not current tier — no XP
+            ci.cancel();
+        }
+
     }
 
     //@Inject(method = "interactMob", at = @At("HEAD"), cancellable = true)

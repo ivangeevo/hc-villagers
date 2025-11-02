@@ -1,10 +1,8 @@
 package org.ivangeevo.hc_villagers.trades;
 
-import com.bwt.blocks.BwtBlocks;
 import net.minecraft.item.Items;
 import net.minecraft.village.TradeOffers;
 import org.ivangeevo.animageddon.item.ModItems;
-import org.ivangeevo.btwr_ds.item.BTWRDS_Items;
 
 import java.util.List;
 
@@ -38,16 +36,16 @@ public class ModLibrarianTrades extends AbstractVillagerTradesProvider {
     };
 
     private static final TradeOffers.Factory[] LEVEL_4_TRADES = {
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.detectorBlock.asItem(), Items.DISPENSER), arithmeticMean(4,8), 12, 20),
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.lensBlock.asItem(), Items.DAYLIGHT_DETECTOR), arithmeticMean(4,8), 12, 20),
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.buddyBlock.asItem(), Items.OBSERVER), arithmeticMean(4,8), 12, 20),
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.blockDispenserBlock.asItem(), Items.STICKY_PISTON), arithmeticMean(4,8), 12, 20),
+            //new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.detectorBlock.asItem(), Items.DISPENSER), arithmeticMean(4,8), 12, 20),
+            //new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.lensBlock.asItem(), Items.DAYLIGHT_DETECTOR), arithmeticMean(4,8), 12, 20),
+            //new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.buddyBlock.asItem(), Items.OBSERVER), arithmeticMean(4,8), 12, 20),
+            //new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.blockDispenserBlock.asItem(), Items.STICKY_PISTON), arithmeticMean(4,8), 12, 20),
     };
 
     private static final TradeOffers.Factory[] LEVEL_5_TRADES = {
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.bloodWoodBlocks.saplingItem.asItem(), Items.CRIMSON_FUNGUS), arithmeticMean(8,16), 12, 20),
+            //new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.bloodWoodBlocks.saplingItem.asItem(), Items.CRIMSON_FUNGUS), arithmeticMean(8,16), 12, 20),
             //new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtBlocks.netherGrothSpores, Items.WARPED_FUNGUS), arithmeticMean(8,16), 12, 20),
-            new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BTWRDS_Items.BRIMSTONE, Items.GUNPOWDER), arithmeticMean(16,32), 12, 20),
+            //new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BTWRDS_Items.BRIMSTONE, Items.GUNPOWDER), arithmeticMean(16,32), 12, 20),
             //new TradeOffers.SellItemFactory(getOptionalItem(BWT, BwtItems.arcaneScrollPower, Items.GUNPOWDER).asItem(), arithmeticMean(32,48), 12, 20),
             new TradeOffers.ProcessItemFactory(Items.ENDER_PEARL, 1, arithmeticMean(6,8), Items.ENDER_EYE, 1, 3, 30, 0.05F),
     };
