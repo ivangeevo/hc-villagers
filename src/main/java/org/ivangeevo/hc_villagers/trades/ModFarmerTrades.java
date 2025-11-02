@@ -1,9 +1,9 @@
-package org.ivangeevo.hcVillagers.trades;
+package org.ivangeevo.hc_villagers.trades;
 
 import btwr.core.item.BTWR_Items;
 import com.bwt.blocks.BwtBlocks;
 import com.bwt.items.BwtItems;
-import ivangeevo.sturdy_trees.SturdyTreesItems;
+import ivangeevo.sturdy_trees.item.SturdyTreesItems;
 import net.minecraft.item.Items;
 import net.minecraft.village.TradeOffers;
 import org.ivangeevo.vegehenna.item.ModItems;
@@ -29,7 +29,7 @@ public class ModFarmerTrades extends AbstractVillagerTradesProvider {
 
     private static final TradeOffers.Factory[] LEVEL_2_TRADES = {
             new TradeOffers.BuyItemFactory(Items.MILK_BUCKET, 1, 12, 10,2),
-            new TradeOffers.BuyItemFactory(getOptionalItem(BTWR, BTWR_Items.HEMP_SEEDS, Items.WHEAT_SEEDS), arithmeticMean(24,32), 4, 5),
+            new TradeOffers.BuyItemFactory(getOptionalItem(BTWR, BwtItems.hempSeedsItem, Items.WHEAT_SEEDS), arithmeticMean(24,32), 4, 5),
             new TradeOffers.BuyItemFactory(Items.SUGAR, arithmeticMean(10,20), 8, 5),
             new TradeOffers.BuyItemFactory(Items.COCOA_BEANS, arithmeticMean(10,16), 4, 5),
             new TradeOffers.BuyItemFactory(getOptionalItem(BWT, BwtItems.flourItem, Items.WHEAT), arithmeticMean(24,32), 8, 5),

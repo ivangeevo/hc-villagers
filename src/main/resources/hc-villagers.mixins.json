@@ -1,10 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "org.ivangeevo.hcVillagers.mixin",
+  "package": "org.ivangeevo.hc_villagers.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "BuyItemFactoryAccessor",
+    "MerchantEntityMixin",
+    "TradeOfferMixin",
     "VillagerEntityMixin"
   ],
   "injectors": {

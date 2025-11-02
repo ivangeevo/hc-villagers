@@ -14,7 +14,7 @@ loom {
     splitEnvironmentSourceSets()
 
     mods {
-        "hc-villagers" {
+        "hc_villagers" {
             sourceSet sourceSets.main
             sourceSet sourceSets.client
         }
@@ -27,7 +27,6 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
-    maven { url "https://ivangeevo.github.io/btwr-shared-lib/" }
     maven { url "https://api.modrinth.com/maven"}
 
 
@@ -41,20 +40,32 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation "org.ivangeevo:btwr-shared-lib:${project.btwr_sl_version}"
+
+    // BTWR Shared Library
+    modImplementation "maven.modrinth:btwr-shared-library:${project.btwr_sl_version}"
+
+    //modImplementation files("libs/btwr-shared-lib-${project.btwr_sl_version}.jar")
 
     // BTWR related mods
-    //modImplementation "maven.modrinth:btwrcore:${project.btwr_core_version}"
-    //modImplementation "maven.modrinth:sturdy-trees:${project.sturdy_trees_version}"
-    //modImplementation "maven.modrinth:tough-environment:${project.tough_environment_version}"
+    modImplementation "maven.modrinth:btwr-core:${project.btwr_core_version}"
+    modImplementation "maven.modrinth:self-sustainable:${project.self_sustainable_version}"
+    modImplementation "maven.modrinth:sturdy-trees:${project.sturdy_trees_version}"
+    modImplementation "maven.modrinth:tough-environment:${project.tough_environment_version}"
+    modImplementation "maven.modrinth:better-with-time:${project.bwt_version}"
+    modImplementation "maven.modrinth:animageddon:${project.animageddon_version}"
+    modImplementation "maven.modrinth:vegehenna:${project.vegehenna_version}"
+    modImplementation "maven.modrinth:bwt-hc-tweaks:${project.bwt_hct_version}"
+    modImplementation "maven.modrinth:granular-hunger:${project.granular_hunger_version}"
 
-    modImplementation files("libs/tough_environment-${project.tough_environment_version}-1.21.1.jar")
-    modImplementation files("libs/btwr-core-${project.btwr_core_version}-1.21.1.jar")
-    modImplementation files("libs/better_with_time-${project.bwt_version}.jar")
-    modImplementation files("libs/sturdy_trees-${project.sturdy_trees_version}-1.21.1.jar")
-    modImplementation files("libs/vegehenna-${project.vegehenna_version}-1.21.1.jar")
-    modImplementation files("libs/animageddon-${project.animageddon_version}-1.21.1.jar")
-    modImplementation files("libs/bwt-hc-tweaks-${project.bwt_hct_version}.jar")
+
+
+    //modImplementation files("libs/tough_environment-${project.tough_environment_version}-1.21.1.jar")
+    //modImplementation files("libs/btwr-core-${project.btwr_core_version}-1.21.1.jar")
+    //modImplementation files("libs/better_with_time-${project.bwt_version}.jar")
+    //modImplementation files("libs/sturdy_trees-${project.sturdy_trees_version}-1.21.1.jar")
+    //modImplementation files("libs/vegehenna-${project.vegehenna_version}-1.21.1.jar")
+    //modImplementation files("libs/animageddon-${project.animageddon_version}-1.21.1.jar")
+    //modImplementation files("libs/bwt-hc-tweaks-${project.bwt_hct_version}.jar")
     modImplementation files("libs/btwr_ds-1.0.0-1.21.1.jar")
 
 }

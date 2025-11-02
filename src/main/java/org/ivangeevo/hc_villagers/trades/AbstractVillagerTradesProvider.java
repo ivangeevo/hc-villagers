@@ -1,4 +1,4 @@
-package org.ivangeevo.hcVillagers.trades;
+package org.ivangeevo.hc_villagers.trades;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemConvertible;

@@ -11,10 +11,10 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "org.ivangeevo.hcVillagers.client.HCVillagersModClient"
+      "org.ivangeevo.hc_villagers.HCVillagersModClient"
     ],
     "main": [
-      "org.ivangeevo.hcVillagers.HCVillagersMod"
+      "org.ivangeevo.hc_villagers.HCVillagersMod"
     ]
   },
   "mixins": [

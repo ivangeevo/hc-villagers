@@ -1,10 +1,10 @@
-package org.ivangeevo.hcVillagers;
+package org.ivangeevo.hc_villagers;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.village.TradeOffers;
 import net.minecraft.village.VillagerProfession;
-import org.ivangeevo.hcVillagers.trades.ModFarmerTrades;
-import org.ivangeevo.hcVillagers.trades.ModLibrarianTrades;
+import org.ivangeevo.hc_villagers.trades.ModFarmerTrades;
+import org.ivangeevo.hc_villagers.trades.ModLibrarianTrades;
 
 import java.util.List;
 
@@ -17,8 +17,8 @@ public class VillagerTradesManager {
         setNewTrades(VillagerProfession.LIBRARIAN, ModLibrarianTrades.NEW_TRADES);
     }
 
-    // Clears the original map and puts in our custom trades.
-    private static void setNewTrades(VillagerProfession profession, List<TradeOffers. Factory[]> newTradesList) {
+    // Clears the original map and puts with our custom trades.
+    private static void setNewTrades(VillagerProfession profession, List<TradeOffers.Factory[]> newTradesList) {
         Int2ObjectMap<TradeOffers.Factory[]> villagerTrades = PROFESSION_TO_LEVELED_TRADE.get(profession);
 
         if (villagerTrades != null) {

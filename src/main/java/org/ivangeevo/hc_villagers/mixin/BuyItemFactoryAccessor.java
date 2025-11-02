@@ -1,4 +1,4 @@
-package org.ivangeevo.hcVillagers.mixin;
+package org.ivangeevo.hc_villagers.mixin;
 
 import net.minecraft.village.TradeOffers;
 import net.minecraft.village.TradedItem;

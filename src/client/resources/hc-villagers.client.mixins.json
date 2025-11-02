@@ -1,11 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "org.ivangeevo.hcVillagers.mixin.client",
+  "package": "org.ivangeevo.hc_villagers.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+  ]
 }

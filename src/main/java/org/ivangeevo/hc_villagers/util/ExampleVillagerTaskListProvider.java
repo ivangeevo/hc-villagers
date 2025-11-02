@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.2.2 (FabricMC 7c48b8c4).
  */
-package org.ivangeevo.hcVillagers.util;
+package org.ivangeevo.hc_villagers.util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

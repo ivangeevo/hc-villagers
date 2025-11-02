@@ -1,4 +1,4 @@
-package org.ivangeevo.hcVillagers.util;
+package org.ivangeevo.hc_villagers.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemConvertible;

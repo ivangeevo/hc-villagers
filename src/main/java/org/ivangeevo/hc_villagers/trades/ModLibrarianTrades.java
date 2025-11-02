@@ -1,4 +1,4 @@
-package org.ivangeevo.hcVillagers.trades;
+package org.ivangeevo.hc_villagers.trades;
 
 import com.bwt.blocks.BwtBlocks;
 import net.minecraft.item.Items;

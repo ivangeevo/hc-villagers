@@ -1,4 +1,4 @@
-package org.ivangeevo.hcVillagers;
+package org.ivangeevo.hc_villagers;
 
 public class OGVillagerTradesManager
 {

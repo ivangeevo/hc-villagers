@@ -1,4 +1,4 @@
-package org.ivangeevo.hcVillagers.client;
+package org.ivangeevo.hc_villagers;
 
 import net.fabricmc.api.ClientModInitializer;
 

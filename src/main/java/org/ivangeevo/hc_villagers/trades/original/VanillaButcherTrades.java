@@ -1,4 +1,4 @@
-package org.ivangeevo.hcVillagers.trades.original;
+package org.ivangeevo.hc_villagers.trades.original;
 
 import net.minecraft.item.Items;
 import net.minecraft.village.TradeOffers;
