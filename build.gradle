@@ -21,6 +21,22 @@ loom {
     }
 }
 
+// Mixin hotswapping in dev (https://wiki.fabricmc.net/tutorial:mixin_hotswaps).
+// Adds the Mixin java agent to every Loom run config, so it survives Gradle syncs (Loom regenerates
+// .idea/runConfigurations on every sync, which wipes hand-edited VM options).
+// Done in afterEvaluate so the classpath is only resolved after all dependencies are declared.
+afterEvaluate {
+    def mixinJar = configurations.runtimeClasspath.find { it.name.startsWith("sponge-mixin") }
+    if (mixinJar != null) {
+        loom.runs.configureEach {
+            vmArg "-javaagent:${mixinJar.absolutePath}"
+            vmArg "-Dmixin.hotSwap=true"
+        }
+    } else {
+        logger.warn("sponge-mixin jar not found on the runtime classpath; mixin hotswapping is disabled")
+    }
+}
+
 repositories {
     maven { url "https://api.modrinth.com/maven"}
 }

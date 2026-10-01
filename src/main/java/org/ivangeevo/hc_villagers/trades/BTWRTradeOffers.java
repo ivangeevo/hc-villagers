@@ -38,4 +38,5 @@ public class BTWRTradeOffers extends TradeOffers {
             return new TradeOffer(this.stack, new ItemStack(Items.EMERALD, this.price), this.maxUses, this.experience, this.multiplier);
         }
     }
+
 }

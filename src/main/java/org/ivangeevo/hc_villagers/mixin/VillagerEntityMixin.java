@@ -37,13 +37,9 @@ import java.util.Set;
 public abstract class VillagerEntityMixin extends MerchantEntity {
 
     @Shadow private int foodLevel;
-
-    @Shadow protected abstract boolean lacksFood();
-
-    @Shadow public abstract VillagerData getVillagerData();
-
     @Shadow @Final private static Set<Item> GATHERABLE_ITEMS;
-
+    @Shadow protected abstract boolean lacksFood();
+    @Shadow public abstract VillagerData getVillagerData();
     @Shadow public abstract boolean isReadyToBreed();
 
     public VillagerEntityMixin(EntityType<? extends MerchantEntity> entityType, World world) {

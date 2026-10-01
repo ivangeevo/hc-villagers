@@ -1,54 +1,17 @@
 package org.ivangeevo.hc_villagers;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.village.TradeOffers;
-import net.minecraft.village.VillagerProfession;
-import org.ivangeevo.hc_villagers.trades.ModFarmerTrades;
-import org.ivangeevo.hc_villagers.trades.ModLibrarianTrades;
-
-import java.util.List;
-
-import static net.minecraft.village.TradeOffers.PROFESSION_TO_LEVELED_TRADE;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.resource.ResourceType;
+import org.ivangeevo.hc_villagers.trading.data.HCTradeDataLoader;
 
 public class VillagerTradesManager {
 
+    /**
+     * Trades are data-driven: they're loaded from {@code data/<namespace>/hc_villager_trades/*.json} on every data
+     * reload. A profession uses the BTW trading system only if some data pack defines trades for it.
+     * This mod's own tables are in {@code src/main/resources/data/hc_villagers/hc_villager_trades/}.
+     */
     public static void register() {
-        setNewTrades(VillagerProfession.FARMER, ModFarmerTrades.NEW_TRADES);
-        setNewTrades(VillagerProfession.LIBRARIAN, ModLibrarianTrades.NEW_TRADES);
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new HCTradeDataLoader());
     }
-
-    // Clears the original map and puts with our custom trades.
-    private static void setNewTrades(VillagerProfession profession, List<TradeOffers.Factory[]> newTradesList) {
-        Int2ObjectMap<TradeOffers.Factory[]> villagerTrades = PROFESSION_TO_LEVELED_TRADE.get(profession);
-
-        if (villagerTrades != null) {
-            for (int level = 1; level <= 5; level++) {
-                // Clear the vanilla trades for this level
-                villagerTrades.put(level, new TradeOffers.Factory[]{}); // Empty the array
-
-                // Add the custom modded trades for each level
-                switch (level) {
-                    case 1:
-                        villagerTrades.put(level, newTradesList.getFirst());
-                        break;
-                    case 2:
-                        villagerTrades.put(level, newTradesList.get(1));
-                        break;
-                    case 3:
-                        villagerTrades.put(level, newTradesList.get(2));
-                        break;
-                    case 4:
-                        villagerTrades.put(level, newTradesList.get(3));
-                        break;
-                    case 5:
-                        villagerTrades.put(level, newTradesList.get(4));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-
 }
