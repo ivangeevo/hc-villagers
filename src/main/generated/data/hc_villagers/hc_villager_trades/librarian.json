@@ -1,0 +1,20 @@
+{
+  "levels": {
+    "1": "hc_villagers:librarian/level_1",
+    "2": "hc_villagers:librarian/level_2"
+  },
+  "profession": "minecraft:librarian",
+  "required": [
+    5,
+    7,
+    10,
+    15
+  ],
+  "slots": [
+    1,
+    4,
+    5,
+    7,
+    8
+  ]
+}

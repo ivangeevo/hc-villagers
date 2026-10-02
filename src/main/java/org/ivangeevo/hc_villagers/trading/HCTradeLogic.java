@@ -91,6 +91,23 @@ public final class HCTradeLogic {
             st.kinds.add(HCTradeKind.NORMAL.ordinal());
         }
 
+        // 3) "++" trade takes one of the random slots when the bar is already full
+        if (reserveLevelUp) {
+            TradeOffer up = table.createLevelUp(villager, level, rnd);
+            if (up != null) {
+                offers.add(up);
+                st.slotLevels.add(level);
+                st.kinds.add(HCTradeKind.LEVEL_UP.ordinal());
+            }
+        }
+
+        // 4) always-shown trades
+        for (TradeOffer offer : table.createGuaranteed(villager, level, rnd)) {
+            offers.add(offer);
+            st.kinds.add(HCTradeKind.FIXED.ordinal());
+        }
+
+        // 5) "only one at a time" groups (must stay last: tick() finds them via index - firstExclusive)
         for (TradeOffer offer : table.createExclusive(villager, level, rnd, st.exclusivePicks)) {
             offers.add(offer);
             st.kinds.add(HCTradeKind.EXCLUSIVE.ordinal());
@@ -151,7 +168,8 @@ public final class HCTradeLogic {
                 st.kinds.set(i, kind.ordinal());
             }
 
-            int maxUses = (kind == HCTradeKind.FIXED || kind == HCTradeKind.EXCLUSIVE) ? FIXED_MAX_USES : 1;
+            //int maxUses = (kind == HCTradeKind.FIXED || kind == HCTradeKind.EXCLUSIVE) ? FIXED_MAX_USES : 1;
+            int maxUses = 1;
             int xp = kind == HCTradeKind.PLUS ? step : 0;
             TradeOffer offer = offers.get(i);
             if (offer.getMaxUses() != maxUses || offer.getMerchantExperience() != xp) {
@@ -213,12 +231,11 @@ public final class HCTradeLogic {
                 }
                 st.pendingRerolls.add(index);
             }
-            case NORMAL, EXCLUSIVE -> st.pendingRerolls.add(index);
+            case NORMAL, EXCLUSIVE, FIXED -> st.pendingRerolls.add(index);
             case LEVEL_UP -> {
                 st.pendingLevelUp = true;
                 levelingUp = true;
             }
-            case FIXED -> { /* stays as it is */ }
         }
 
         villager.setExperience(toVanillaXp(level, st, table));
@@ -280,6 +297,11 @@ public final class HCTradeLogic {
                     continue;
                 }
 
+                if (k == HCTradeKind.FIXED) {
+                    offers.get(index).resetUses(); // the same trade comes back available
+                    continue;
+                }
+
                 if (index >= st.slotLevels.size()) continue;
                 if (k != HCTradeKind.NORMAL && k != HCTradeKind.PLUS) continue;
                 HCTradeTable.Rolled rolled = table.rollRandom(villager, level, rnd, offers);
@@ -307,7 +329,7 @@ public final class HCTradeLogic {
             if (kind == HCTradeKind.LEVEL_UP) {
                 st.pendingLevelUp = true;
                 st.dirty = true;
-            } else if ((kind == HCTradeKind.PLUS || kind == HCTradeKind.NORMAL) && !st.pendingRerolls.contains(i)) {
+            } else if (!st.pendingRerolls.contains(i)) {
                 st.pendingRerolls.add(i);
                 st.dirty = true;
             }

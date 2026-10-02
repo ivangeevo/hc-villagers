@@ -14,7 +14,9 @@ import net.minecraft.village.VillagerProfession;
 import org.ivangeevo.hc_villagers.HCVillagersMod;
 import org.ivangeevo.hc_villagers.trading.HCTradeTable;
 import org.ivangeevo.hc_villagers.trading.HCTradeTables;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
@@ -33,6 +35,7 @@ import java.util.TreeMap;
  */
 public final class HCTradeDataLoader implements SimpleSynchronousResourceReloadListener {
     public static final String DIRECTORY = "hc_villager_trades";
+    public static final String LEVEL_DIRECTORY = "hc_villager_levels";
     private static final Identifier ID = Identifier.of(HCVillagersMod.MOD_ID, DIRECTORY);
     private static final int LEVELS = 5;
 
@@ -63,7 +66,7 @@ public final class HCTradeDataLoader implements SimpleSynchronousResourceReloadL
 
                 Builder builder = builders.computeIfAbsent(profession.get(), p -> new Builder());
                 if (file.replace()) builder.clear();
-                builder.add(file, fileId);
+                builder.add(file, fileId, manager);
             } catch (Exception e) {
                 HCVillagersMod.LOGGER.error("[{}] Couldn't load villager trades from {}: {}", HCVillagersMod.MOD_ID, fileId, e.getMessage());
             }
@@ -106,11 +109,11 @@ public final class HCTradeDataLoader implements SimpleSynchronousResourceReloadL
             required = HCTradeTable.defaultRequired();
         }
 
-        void add(ProfessionTradesFile file, Identifier fileId) {
+        void add(ProfessionTradesFile file, Identifier fileId, ResourceManager manager) {
             file.slots().ifPresent(values -> copyInto(values, slots));
             file.required().ifPresent(values -> copyInto(values, required));
 
-            file.levels().forEach((key, trades) -> {
+            file.levels().forEach((key, entry) -> {
                 int level;
                 try {
                     level = Integer.parseInt(key);
@@ -121,6 +124,17 @@ public final class HCTradeDataLoader implements SimpleSynchronousResourceReloadL
                     HCVillagersMod.LOGGER.warn("[{}] {}: ignoring level '{}' (must be 1-{})", HCVillagersMod.MOD_ID, fileId, key, LEVELS);
                     return;
                 }
+
+                ProfessionTradesFile.LevelTrades trades = entry.map(ref -> {
+                    try {
+                        return loadLevelFile(manager, ref, fileId);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }, inline -> inline);
+
+                if (trades == null) return;
+
                 String where = fileId + " level " + level;
                 int index = level - 1;
                 trades.random().forEach(trade -> trade.toFactory(where).ifPresent(random.get(index)::add));
@@ -139,6 +153,25 @@ public final class HCTradeDataLoader implements SimpleSynchronousResourceReloadL
                     }
                 }
             });
+        }
+
+        @Nullable
+        private static ProfessionTradesFile.LevelTrades loadLevelFile(ResourceManager manager, Identifier ref, Identifier fileId) throws IOException {
+            Identifier path =  ref.withPrefixedPath(LEVEL_DIRECTORY + "/").withSuffixedPath(".json");
+            Optional<Resource> resource = manager.getResource(path);
+
+            if (resource.isEmpty()) {
+                HCVillagersMod.LOGGER.warn("[{}] {}: level file '{}' not found (looked for {})", HCVillagersMod.MOD_ID, fileId, ref, path);
+                return null;
+            }
+            try (Reader reader = resource.get().getReader()) {
+                return ProfessionTradesFile.LevelTrades.CODEC
+                        .parse(JsonOps.INSTANCE, JsonParser.parseReader(reader))
+                        .getOrThrow(JsonParseException::new);
+            } catch (Exception e) {
+                HCVillagersMod.LOGGER.error("[{}] {}: couldn't load level file {}: {}", HCVillagersMod.MOD_ID, fileId, path, e.getMessage());
+                return null;
+            }
         }
 
         private static void copyInto(List<Integer> values, int[] target) {

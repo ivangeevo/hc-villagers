@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "hc-villagers",
+  "id": "hc_villagers",
   "version": "${version}",
   "name": "Hardcore Villagers",
   "description": "",
@@ -10,12 +10,9 @@
   "icon": "assets/hc-villagers/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "org.ivangeevo.hc_villagers.HCVillagersModClient"
-    ],
-    "main": [
-      "org.ivangeevo.hc_villagers.HCVillagersMod"
-    ]
+    "client": ["org.ivangeevo.hc_villagers.HCVillagersModClient"],
+    "main": ["org.ivangeevo.hc_villagers.HCVillagersMod"],
+    "fabric-datagen": ["org.ivangeevo.hc_villagers.datagen.HCVillagersDataGenerator"]
   },
   "mixins": [
     "hc-villagers.mixins.json",

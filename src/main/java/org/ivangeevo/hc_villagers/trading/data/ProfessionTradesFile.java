@@ -1,5 +1,6 @@
 package org.ivangeevo.hc_villagers.trading.data;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Identifier;
@@ -35,14 +36,14 @@ public record ProfessionTradesFile(
         boolean replace,
         Optional<List<Integer>> slots,
         Optional<List<Integer>> required,
-        Map<String, LevelTrades> levels) {
+        Map<String, Either<Identifier, LevelTrades>> levels) {
 
     public static final Codec<ProfessionTradesFile> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Identifier.CODEC.fieldOf("profession").forGetter(ProfessionTradesFile::profession),
             Codec.BOOL.optionalFieldOf("replace", false).forGetter(ProfessionTradesFile::replace),
             Codec.INT.listOf().optionalFieldOf("slots").forGetter(ProfessionTradesFile::slots),
             Codec.INT.listOf().optionalFieldOf("required").forGetter(ProfessionTradesFile::required),
-            Codec.unboundedMap(Codec.STRING, LevelTrades.CODEC).optionalFieldOf("levels", Map.of()).forGetter(ProfessionTradesFile::levels)
+            Codec.unboundedMap(Codec.STRING, Codec.either(Identifier.CODEC, LevelTrades.CODEC)).optionalFieldOf("levels", Map.of()).forGetter(ProfessionTradesFile::levels)
     ).apply(instance, ProfessionTradesFile::new));
 
     public record LevelTrades(List<TradeEntry> random, List<TradeEntry> guaranteed,

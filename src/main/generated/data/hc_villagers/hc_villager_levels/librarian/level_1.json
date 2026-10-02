@@ -1,0 +1,57 @@
+{
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:writable_book",
+      "item": "infernal_enchanting:ancient_manuscript"
+    },
+    "sell": {
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          24,
+          32
+        ],
+        "item": "minecraft:paper"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          24,
+          32
+        ],
+        "item": "minecraft:ink_sac"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          24,
+          32
+        ],
+        "item": "minecraft:feather"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:name_tag"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "guaranteed": [
+    {
+      "buy": {
+        "item": "minecraft:book"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          3
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "fallback": "minecraft:writable_book",
+        "item": "infernal_enchanting:ancient_manuscript"
+      }
+    }
+  ],
+  "guaranteed_one_of": [
+    [
+      {
+        "buy": {
+          "count": 2,
+          "fallback": "minecraft:redstone",
+          "item": "bwt:redstone_eye"
+        },
+        "buy_2": {
+          "count": [
+            6,
+            9
+          ],
+          "item": "minecraft:emerald"
+        },
+        "sell": {
+          "fallback": "minecraft:dispenser",
+          "item": "bwt:detector_block"
+        }
+      },
+      {
+        "buy": {
+          "count": 4,
+          "fallback": "minecraft:redstone",
+          "item": "bwt:redstone_eye"
+        },
+        "buy_2": {
+          "count": [
+            6,
+            9
+          ],
+          "item": "minecraft:emerald"
+        },
+        "sell": {
+          "fallback": "minecraft:observer",
+          "item": "bwt:buddy_block"
+        }
+      },
+      {
+        "buy": {
+          "count": 6,
+          "item": "minecraft:mossy_cobblestone"
+        },
+        "buy_2": {
+          "count": [
+            6,
+            9
+          ],
+          "item": "minecraft:emerald"
+        },
+        "sell": {
+          "fallback": "minecraft:sticky_piston",
+          "item": "bwt:block_dispenser"
+        }
+      }
+    ]
+  ],
+  "level_up": {
+    "buy": {
+      "item": "minecraft:brewing_stand"
+    },
+    "sell": {
+      "count": 2,
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          16,
+          24
+        ],
+        "item": "minecraft:redstone"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          4,
+          6
+        ],
+        "item": "btwr_ds:redstone_latch"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:piston"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "bwt:turntable"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    }
+  ]
+}
