@@ -23,7 +23,7 @@ import java.util.List;
  * </ul>
  */
 public final class HCTradeTable {
-    private static final int[] DEFAULT_SLOTS = {2, 2, 2, 2, 2};
+    private static final int[] DEFAULT_SLOTS = {1, 4, 5, 7, 8};
     private static final int[] DEFAULT_REQUIRED = {5, 7, 10, 15};
 
     /** Default number of random offers shown per level (index 0 = level 1). Returns a copy. */

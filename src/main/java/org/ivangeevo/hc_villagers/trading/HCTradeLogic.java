@@ -1,5 +1,6 @@
 package org.ivangeevo.hc_villagers.trading;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -13,6 +14,9 @@ import net.minecraft.village.VillagerData;
 import org.ivangeevo.hc_villagers.mixin.MerchantScreenHandlerAccessor;
 import org.ivangeevo.hc_villagers.network.TradeKindsPayload;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * BTW-style trading for managed professions:
@@ -64,12 +68,27 @@ public final class HCTradeLogic {
         st.slotLevels.clear();
         st.pendingRerolls.clear();
 
-        for (int i = 0; i < table.slots(level); i++) {
+        Carry carried = (carry != null && carry.villager() == villager) ? carry : null;
+
+        boolean reserveLevelUp = st.levelUpReady && table.hasLevelUp(level);
+        int randomSlots = table.slots(level) - (reserveLevelUp ? 1 : 0);
+
+        // 1) keep what the villager already offered
+        if (carried != null) {
+            for (int i = 0; i < carried.offers().size() && offers.size() < randomSlots; i++) {
+                offers.add(carried.offers().get(i));
+                st.slotLevels.add(carried.levels().getInt(i));
+                st.kinds.add(HCTradeKind.NORMAL.ordinal());
+            }
+        }
+
+        // 2) roll only the missing slots
+        while (offers.size() < randomSlots) {
             HCTradeTable.Rolled rolled = table.rollRandom(villager, level, rnd, offers);
             if (rolled == null) break;
             offers.add(rolled.offer());
             st.slotLevels.add(rolled.level());
-            st.kinds.add(HCTradeKind.NORMAL.ordinal()); // PLUS/NORMAL decided in retag()
+            st.kinds.add(HCTradeKind.NORMAL.ordinal());
         }
 
         for (TradeOffer offer : table.createGuaranteed(villager, level, rnd)) {
@@ -77,18 +96,41 @@ public final class HCTradeLogic {
             st.kinds.add(HCTradeKind.FIXED.ordinal());
         }
 
-        if (st.levelUpReady) addLevelUpOffer(villager, table, st, offers, level, rnd);
-
         retag(villager, table, st, offers);
         villager.setExperience(toVanillaXp(level, st, table));
     }
 
-    private static void addLevelUpOffer(VillagerEntity villager, HCTradeTable table, HCTradeState st,
-                                        TradeOfferList offers, int level, Random rnd) {
+    /** Puts the "++" trade into an existing random slot (a just-traded one if possible) */
+    private static void placeLevelUpOffer(VillagerEntity villager, HCTradeTable table, HCTradeState st,
+                                          TradeOfferList offers, int level, Random rnd) {
         TradeOffer offer = table.createLevelUp(villager, level, rnd);
-        if (offer != null) {
+        if (offer == null) return;
+
+        int slot = -1;
+        // Prefer a slot that is about to be rerolled anyway
+        for (int j = 0; j < st.pendingRerolls.size(); j++) {
+            int idx = st.pendingRerolls.getInt(j);
+            if (idx < st.slotLevels.size()) {
+                slot = idx;
+                st.pendingRerolls.removeInt(j);
+                break;
+            }
+        }
+        // Otherwise take the last random slot that isn't already special
+        if (slot < 0) {
+            for (int i = st.slotLevels.size() - 1; i >= 0; i--) {
+                HCTradeKind k = st.kindAt(i);
+                if (k == HCTradeKind.NORMAL || k == HCTradeKind.PLUS) { slot = i; break; }
+            }
+        }
+
+        if (slot < 0) { // no random slots at all: fall back to appending
             offers.add(offer);
             st.kinds.add(HCTradeKind.LEVEL_UP.ordinal());
+        } else {
+            offers.set(slot, offer);
+            st.kinds.set(slot, HCTradeKind.LEVEL_UP.ordinal());
+            st.slotLevels.set(slot, level);
         }
     }
 
@@ -198,12 +240,18 @@ public final class HCTradeLogic {
         int level = villager.getVillagerData().getLevel();
 
         if (st.pendingLevelUp && VillagerData.canLevelUp(level)) {
+            carry = collectCarried(villager, st, offers); // must run before pendingRerolls is cleared
+
             st.pendingLevelUp = false;
             st.plusDone = 0;
             st.levelUpReady = false;
             st.pendingRerolls.clear();
             // Vanilla levelUp(): level + 1, then fillRecipes() -> rebuildAll() for the new level
-            ((HCTradingVillager) villager).hcVillagers$levelUp();
+            try {
+                ((HCTradingVillager) villager).hcVillagers$levelUp();
+            } finally {
+                carry = null;
+            }
             villager.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, REGEN_TICKS, 0));
             villager.getWorld().sendEntityStatus(villager, HAPPY_PARTICLES_STATUS);
         } else if (st.kinds.size() != offers.size()) {
@@ -212,10 +260,16 @@ public final class HCTradeLogic {
         } else {
             st.pendingLevelUp = false;
             Random rnd = villager.getRandom();
+
+            if (st.levelUpReady && !st.hasLevelUpOffer() && table.hasLevelUp(level)) {
+                placeLevelUpOffer(villager, table, st, offers, level, rnd);
+            }
+
             for (int i = 0; i < st.pendingRerolls.size(); i++) {
                 int index = st.pendingRerolls.getInt(i);
                 if (index >= st.slotLevels.size()) continue;
-                // "offers" still contains the traded offer, so the new roll will differ from it
+                HCTradeKind k = st.kindAt(index);
+                if (k != HCTradeKind.NORMAL && k != HCTradeKind.PLUS) continue;
                 HCTradeTable.Rolled rolled = table.rollRandom(villager, level, rnd, offers);
                 if (rolled != null) {
                     offers.set(index, rolled.offer());
@@ -224,9 +278,6 @@ public final class HCTradeLogic {
             }
             st.pendingRerolls.clear();
 
-            if (st.levelUpReady && !st.hasLevelUpOffer()) {
-                addLevelUpOffer(villager, table, st, offers, level, rnd);
-            }
             retag(villager, table, st, offers);
             villager.setExperience(toVanillaXp(level, st, table));
         }
@@ -327,5 +378,25 @@ public final class HCTradeLogic {
             if (offers.get(i) == offer) return i;
         }
         return -1;
+    }
+
+    /** Random offers that survive a level-up. Only set for the duration of the levelUp() call (server thread). */
+    private record Carry(VillagerEntity villager, List<TradeOffer> offers, IntArrayList levels) {}
+    private static Carry carry;
+
+    /** Random offers worth keeping: untraded NORMAL/PLUS slots. Traded ones and the "++" offer are dropped. */
+    private static Carry collectCarried(VillagerEntity villager, HCTradeState st, TradeOfferList offers) {
+        List<TradeOffer> kept = new ArrayList<>();
+        IntArrayList levels = new IntArrayList();
+        if (st.kinds.size() != offers.size()) return new Carry(villager, kept, levels);
+
+        for (int i = 0; i < offers.size() && i < st.slotLevels.size(); i++) {
+            HCTradeKind kind = st.kindAt(i);
+            if (kind != HCTradeKind.NORMAL && kind != HCTradeKind.PLUS) continue;
+            if (st.pendingRerolls.contains(i) || offers.get(i).isDisabled()) continue;
+            kept.add(offers.get(i));
+            levels.add(st.slotLevels.getInt(i));
+        }
+        return new Carry(villager, kept, levels);
     }
 }
