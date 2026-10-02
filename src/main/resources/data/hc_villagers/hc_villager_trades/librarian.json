@@ -3,11 +3,12 @@
   "levels": {
     "1": {
       "random": [
-        {"buy": {"item": "minecraft:paper", "count": [27, 38]}, "sell": "minecraft:emerald"},
-        {"buy": {"item": "minecraft:ink_sac", "count": [27, 38]}, "sell": "minecraft:emerald"},
-        {"buy": {"item": "minecraft:feather", "count": [27, 38]}, "sell": "minecraft:emerald"}
+        {"buy": {"item": "minecraft:paper", "count": [24, 32]}, "sell": "minecraft:emerald"},
+        {"buy": {"item": "minecraft:ink_sac", "count": [24, 32]}, "sell": "minecraft:emerald"},
+        {"buy": {"item": "minecraft:feather", "count": [24, 32]}, "sell": "minecraft:emerald"},
+        {"buy": "minecraft:name_tag", "sell": "minecraft:emerald"}
       ],
-      "level_up": {"buy": "minecraft:writable_book", "sell": {"item": "minecraft:emerald", "count": 2}}
+      "level_up": {"buy": {"item": "infernal_enchanting:ancient_manuscript", "fallback": "minecraft:writable_book"}, "sell": {"item": "minecraft:emerald", "count": 2}}
     },
     "2": {
       "random": [

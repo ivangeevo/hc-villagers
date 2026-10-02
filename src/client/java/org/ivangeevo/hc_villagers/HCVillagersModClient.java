@@ -8,7 +8,9 @@ import org.ivangeevo.hc_villagers.network.TradeKindsPayload;
 public class HCVillagersModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        ClientPlayNetworking.registerGlobalReceiver(TradeKindsPayload.ID,
-                (payload, context) -> ClientTradeKinds.set(payload.syncId(), payload.kinds()));
+        ClientPlayNetworking.registerGlobalReceiver(
+                TradeKindsPayload.ID,
+                (payload, context) -> ClientTradeKinds.set(payload.syncId(), payload.kinds())
+        );
     }
 }

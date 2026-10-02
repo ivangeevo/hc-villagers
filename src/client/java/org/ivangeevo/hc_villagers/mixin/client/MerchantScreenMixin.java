@@ -21,9 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MerchantScreen.class)
 public abstract class MerchantScreenMixin extends HandledScreen<MerchantScreenHandler> {
 
-    @Unique private static final int VISIBLE_ROWS = 7;
-    @Unique private static final int ROW_HEIGHT = 20;
-
     /**
      * GUI sprites for the markers.
      * <p>{@code assets/hc_villagers/textures/gui/sprites/trade_plus.png}
@@ -31,10 +28,12 @@ public abstract class MerchantScreenMixin extends HandledScreen<MerchantScreenHa
      */
     @Unique private static final Identifier PLUS_SPRITE = Identifier.of(HCVillagersMod.MOD_ID, "trade_plus");
     @Unique private static final Identifier DOUBLE_PLUS_SPRITE = Identifier.of(HCVillagersMod.MOD_ID, "trade_double_plus");
+
+    @Unique private static final int VISIBLE_ROWS = 7;
+    @Unique private static final int ROW_HEIGHT = 20;
     @Unique private static final int PLUS_WIDTH = 6;
     @Unique private static final int DOUBLE_PLUS_WIDTH = 12;
     @Unique private static final int PLUS_HEIGHT = 6;
-
     @Unique private static final int SINGLE_PLUS_X = 60;
     @Unique private static final int MARK_Y_OFFSET = 8;
     /**
@@ -53,7 +52,7 @@ public abstract class MerchantScreenMixin extends HandledScreen<MerchantScreenHa
     // Guard against an offer list that is shorter than the selected index / scroll position.
     // Vanilla render() does getRecipes().get(selectedIndex) without a bounds check, so clamp first.
     @Inject(method = "render", at = @At("HEAD"))
-    private void hc$clampIndices(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void clampIndices(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         int size = this.handler.getRecipes().size();
         if (size > 0 && this.selectedIndex >= size) {
             this.selectedIndex = size - 1;
@@ -66,7 +65,7 @@ public abstract class MerchantScreenMixin extends HandledScreen<MerchantScreenHa
 
     // Draws "+" / "++" below the arrow of each visible offer row.
     @Inject(method = "render", at = @At("TAIL"))
-    private void hc$drawTradeMarkers(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void drawTradeMarkers(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         int size = this.handler.getRecipes().size();
         int first = size > VISIBLE_ROWS ? this.indexStartOffset : 0;
 
@@ -81,7 +80,7 @@ public abstract class MerchantScreenMixin extends HandledScreen<MerchantScreenHa
                 sprite = PLUS_SPRITE;
                 width = PLUS_WIDTH;
             } else if (kind == HCTradeKind.LEVEL_UP) {
-                sprite = DOUBLE_PLUS_SPRITE; // the second plus is on the right of the first
+                sprite = DOUBLE_PLUS_SPRITE;
                 width = DOUBLE_PLUS_WIDTH;
             } else {
                 continue;
