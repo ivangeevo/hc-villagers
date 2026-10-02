@@ -24,6 +24,9 @@ public final class HCTradeState {
     /** Pool level each random slot was rolled from (index = offer index). */
     public final IntArrayList slotLevels = new IntArrayList();
 
+    /** Chosen alternative for each exclusive group, flattened in level order then group order. */
+    public final IntArrayList exclusivePicks = new IntArrayList();
+
     // Runtime only: changes queued by a trade and applied on the villager's next tick
     public final IntArrayList pendingRerolls = new IntArrayList();
     public boolean pendingLevelUp;
@@ -48,6 +51,7 @@ public final class HCTradeState {
         levelUpReady = false;
         kinds.clear();
         slotLevels.clear();
+        exclusivePicks.clear();
         pendingRerolls.clear();
         pendingLevelUp = false;
         dirty = false;

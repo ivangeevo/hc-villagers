@@ -79,6 +79,8 @@ public final class HCTradeDataLoader implements SimpleSynchronousResourceReloadL
     private static final class Builder {
         private final List<List<TradeOffers.Factory>> random = emptyLevels();
         private final List<List<TradeOffers.Factory>> guaranteed = emptyLevels();
+        private final List<List<List<TradeOffers.Factory>>> exclusive = emptyExclusive();
+
         private TradeOffers.Factory[] levelUp = new TradeOffers.Factory[LEVELS - 1];
         private int[] slots = HCTradeTable.defaultSlots();
         private int[] required = HCTradeTable.defaultRequired();
@@ -89,9 +91,16 @@ public final class HCTradeDataLoader implements SimpleSynchronousResourceReloadL
             return levels;
         }
 
+        private static List<List<List<TradeOffers.Factory>>> emptyExclusive() {
+            List<List<List<TradeOffers.Factory>>> levels = new ArrayList<>();
+            for (int i = 0; i < LEVELS; i++) levels.add(new ArrayList<>());
+            return levels;
+        }
+
         void clear() {
             random.forEach(List::clear);
             guaranteed.forEach(List::clear);
+            exclusive.forEach(List::clear);
             levelUp = new TradeOffers.Factory[LEVELS - 1];
             slots = HCTradeTable.defaultSlots();
             required = HCTradeTable.defaultRequired();
@@ -116,6 +125,12 @@ public final class HCTradeDataLoader implements SimpleSynchronousResourceReloadL
                 int index = level - 1;
                 trades.random().forEach(trade -> trade.toFactory(where).ifPresent(random.get(index)::add));
                 trades.guaranteed().forEach(trade -> trade.toFactory(where).ifPresent(guaranteed.get(index)::add));
+                trades.guaranteedOneOf().forEach(group -> {
+                    List<TradeOffers.Factory> factories = new ArrayList<>();
+                    group.forEach(trade -> trade.toFactory(where).ifPresent(factories::add));
+                    // A group whose items all failed to resolve is dropped. Groups with at least one valid trade are kept.
+                    if (!factories.isEmpty()) exclusive.get(index).add(factories);
+                });
                 if (trades.levelUp().isPresent()) {
                     if (level == LEVELS) {
                         HCVillagersMod.LOGGER.warn("[{}] {}: level {} is the max level and can't have a level_up trade", HCVillagersMod.MOD_ID, fileId, level);
@@ -133,12 +148,23 @@ public final class HCTradeDataLoader implements SimpleSynchronousResourceReloadL
         }
 
         HCTradeTable build() {
-            return new HCTradeTable(toArrays(random), toArrays(guaranteed), levelUp.clone(), slots.clone(), required.clone());
+            return new HCTradeTable(toArrays(random), toArrays(guaranteed), toGroupArrays(exclusive),
+                    levelUp.clone(), slots.clone(), required.clone());
         }
 
         private static List<TradeOffers.Factory[]> toArrays(List<List<TradeOffers.Factory>> levels) {
             List<TradeOffers.Factory[]> result = new ArrayList<>();
             for (List<TradeOffers.Factory> level : levels) result.add(level.toArray(new TradeOffers.Factory[0]));
+            return result;
+        }
+
+        private static List<TradeOffers.Factory[][]> toGroupArrays(List<List<List<TradeOffers.Factory>>> levels) {
+            List<TradeOffers.Factory[][]> result = new ArrayList<>();
+            for (List<List<TradeOffers.Factory>> groups : levels) {
+                TradeOffers.Factory[][] arr = new TradeOffers.Factory[groups.size()][];
+                for (int g = 0; g < groups.size(); g++) arr[g] = groups.get(g).toArray(new TradeOffers.Factory[0]);
+                result.add(arr);
+            }
             return result;
         }
     }

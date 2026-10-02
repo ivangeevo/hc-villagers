@@ -17,6 +17,7 @@ import java.util.List;
  * <ul>
  *   <li>{@code random}: pools per level (index 0 = level 1). Random slots roll from these.</li>
  *   <li>{@code guaranteed}: always-present trades per level; every level up to the current one is shown.</li>
+ *   <li>{@code exclusive}: per level, groups of alternatives; exactly one of each group is shown at a time.</li>
  *   <li>{@code levelUp}: the "++" trade for levels 1..4 (index 0 = the 1->2 trade).</li>
  *   <li>{@code slots}: how many random offers are shown per level.</li>
  *   <li>{@code required}: how many "+" trades fill the bar for levels 1..4.</li>
@@ -35,6 +36,7 @@ public final class HCTradeTable {
     public static int[] defaultRequired() {
         return DEFAULT_REQUIRED.clone();
     }
+
     /** Chance that a random slot rolls from the current level's pool instead of any unlocked level. */
     private static final float CURRENT_LEVEL_WEIGHT = 0.75F;
     private static final int ROLL_ATTEMPTS = 12;
@@ -42,6 +44,7 @@ public final class HCTradeTable {
 
     private final List<TradeOffers.Factory[]> random;
     private final List<TradeOffers.Factory[]> guaranteed;
+    private final List<TradeOffers.Factory[][]> exclusive;
     private final TradeOffers.Factory[] levelUp;
     private final int[] slots;
     private final int[] required;
@@ -52,8 +55,15 @@ public final class HCTradeTable {
 
     public HCTradeTable(List<TradeOffers.Factory[]> random, List<TradeOffers.Factory[]> guaranteed,
                         TradeOffers.Factory[] levelUp, int[] slots, int[] required) {
+        this(random, guaranteed, List.of(), levelUp, slots, required);
+    }
+
+    public HCTradeTable(List<TradeOffers.Factory[]> random, List<TradeOffers.Factory[]> guaranteed,
+                        List<TradeOffers.Factory[][]> exclusive,
+                        TradeOffers.Factory[] levelUp, int[] slots, int[] required) {
         this.random = random;
         this.guaranteed = guaranteed;
+        this.exclusive = exclusive;
         this.levelUp = levelUp;
         this.slots = slots;
         this.required = required;
@@ -70,6 +80,11 @@ public final class HCTradeTable {
 
     public boolean hasLevelUp(int level) {
         return level >= 1 && level <= levelUp.length && levelUp[level - 1] != null;
+    }
+
+    /** True if the random pool of this exact level has at least one trade. */
+    public boolean hasRandomPool(int level) {
+        return at(random, level).length > 0;
     }
 
     private static TradeOffers.Factory[] at(List<TradeOffers.Factory[]> list, int level) {
@@ -123,8 +138,9 @@ public final class HCTradeTable {
         return false;
     }
 
-    /** Guaranteed offers for every level up to and including {@code level}. */
+    /** Always-available offers for every level up to and including {@code level}. */
     public List<TradeOffer> createGuaranteed(Entity merchant, int level, Random rnd) {
+        List<TradeOffers.Factory> factories = new ArrayList<>();
         List<TradeOffer> result = new ArrayList<>();
         for (int l = 1; l <= level; l++) {
             for (TradeOffers.Factory factory : at(guaranteed, l)) {
@@ -133,6 +149,54 @@ public final class HCTradeTable {
             }
         }
         return result;
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    // "Only one available at a time" groups
+    // ------------------------------------------------------------------------------------------------
+
+    /** All non-empty exclusive groups up to {@code level}, flattened in level order then group order. */
+    private List<TradeOffers.Factory[]> exclusiveGroups(int level) {
+        List<TradeOffers.Factory[]> out = new ArrayList<>();
+        for (int l = 1; l <= level && l <= exclusive.size(); l++) {
+            TradeOffers.Factory[][] groups = exclusive.get(l - 1);
+            if (groups == null) continue;
+            for (TradeOffers.Factory[] g : groups) {
+                if (g != null && g.length > 0) out.add(g);
+            }
+        }
+        return out;
+    }
+
+    /**
+     * One offer per exclusive group up to {@code level}. Missing or out-of-range picks are rolled
+     * and stored in {@code picks}, so the choice survives saves and level-ups.
+     */
+    public List<TradeOffer> createExclusive(Entity merchant, int level, Random rnd, IntArrayList picks) {
+        List<TradeOffers.Factory[]> groups = exclusiveGroups(level);
+        List<TradeOffer> result = new ArrayList<>();
+        for (int i = 0; i < groups.size(); i++) {
+            TradeOffers.Factory[] g = groups.get(i);
+            if (i >= picks.size()) picks.add(rnd.nextInt(g.length));
+            else if (picks.getInt(i) >= g.length) picks.set(i, rnd.nextInt(g.length));
+            TradeOffer offer = g[picks.getInt(i)].create(merchant, rnd);
+            if (offer != null) result.add(offer);
+        }
+        return result;
+    }
+
+    /** Switches a group to a different alternative and returns the new offer. */
+    @Nullable
+    public TradeOffer rerollExclusive(Entity merchant, int level, int group, IntArrayList picks, Random rnd) {
+        List<TradeOffers.Factory[]> groups = exclusiveGroups(level);
+        if (group < 0 || group >= groups.size() || group >= picks.size()) return null;
+        TradeOffers.Factory[] g = groups.get(group);
+        if (g.length > 1) {
+            int next = rnd.nextInt(g.length - 1);
+            if (next >= picks.getInt(group)) next++; // skip the current one
+            picks.set(group, next);
+        }
+        return g[picks.getInt(group)].create(merchant, rnd);
     }
 
     @Nullable

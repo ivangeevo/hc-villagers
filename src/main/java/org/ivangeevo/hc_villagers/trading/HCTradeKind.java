@@ -12,7 +12,9 @@ public enum HCTradeKind {
     /** Guaranteed trade: always present, never runs out, no progress. */
     FIXED,
     /** The "++" trade: only appears when the bar is full, and is the only thing that levels the villager up. */
-    LEVEL_UP;
+    LEVEL_UP,
+    /** Guaranteed trade: only one at a time. **/
+    EXCLUSIVE;
 
     private static final HCTradeKind[] VALUES = values();
 

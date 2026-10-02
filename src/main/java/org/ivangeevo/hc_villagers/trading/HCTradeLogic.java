@@ -91,9 +91,9 @@ public final class HCTradeLogic {
             st.kinds.add(HCTradeKind.NORMAL.ordinal());
         }
 
-        for (TradeOffer offer : table.createGuaranteed(villager, level, rnd)) {
+        for (TradeOffer offer : table.createExclusive(villager, level, rnd, st.exclusivePicks)) {
             offers.add(offer);
-            st.kinds.add(HCTradeKind.FIXED.ordinal());
+            st.kinds.add(HCTradeKind.EXCLUSIVE.ordinal());
         }
 
         retag(villager, table, st, offers);
@@ -151,7 +151,7 @@ public final class HCTradeLogic {
                 st.kinds.set(i, kind.ordinal());
             }
 
-            int maxUses = kind == HCTradeKind.FIXED ? FIXED_MAX_USES : 1;
+            int maxUses = (kind == HCTradeKind.FIXED || kind == HCTradeKind.EXCLUSIVE) ? FIXED_MAX_USES : 1;
             int xp = kind == HCTradeKind.PLUS ? step : 0;
             TradeOffer offer = offers.get(i);
             if (offer.getMaxUses() != maxUses || offer.getMerchantExperience() != xp) {
@@ -213,7 +213,7 @@ public final class HCTradeLogic {
                 }
                 st.pendingRerolls.add(index);
             }
-            case NORMAL -> st.pendingRerolls.add(index);
+            case NORMAL, EXCLUSIVE -> st.pendingRerolls.add(index);
             case LEVEL_UP -> {
                 st.pendingLevelUp = true;
                 levelingUp = true;
@@ -265,10 +265,22 @@ public final class HCTradeLogic {
                 placeLevelUpOffer(villager, table, st, offers, level, rnd);
             }
 
+            int firstExclusive = -1;
+            for (int k = 0; k < st.kinds.size(); k++) {
+                if (st.kindAt(k) == HCTradeKind.EXCLUSIVE) { firstExclusive = k; break; }
+            }
+
             for (int i = 0; i < st.pendingRerolls.size(); i++) {
                 int index = st.pendingRerolls.getInt(i);
-                if (index >= st.slotLevels.size()) continue;
                 HCTradeKind k = st.kindAt(index);
+
+                if (k == HCTradeKind.EXCLUSIVE && firstExclusive >= 0) {
+                    TradeOffer swapped = table.rerollExclusive(villager, level, index - firstExclusive, st.exclusivePicks, rnd);
+                    if (swapped != null) offers.set(index, swapped);
+                    continue;
+                }
+
+                if (index >= st.slotLevels.size()) continue;
                 if (k != HCTradeKind.NORMAL && k != HCTradeKind.PLUS) continue;
                 HCTradeTable.Rolled rolled = table.rollRandom(villager, level, rnd, offers);
                 if (rolled != null) {

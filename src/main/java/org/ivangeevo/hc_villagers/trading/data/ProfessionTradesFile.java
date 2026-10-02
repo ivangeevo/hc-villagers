@@ -20,6 +20,7 @@ import java.util.Optional;
  *     "1": {
  *       "random":     [ trade, ... ], // pool for the random slots ("+" while at this level)
  *       "guaranteed": [ trade, ... ], // always shown from this level on, never runs out
+ *       "guaranteed_one_of": [ [ trade, trade, ... ], ... ], // each inner list is a group; one of it is shown at a time and swaps after a purchase
  *       "level_up":   trade           // the "++" trade that levels the villager up to the next level
  *     },
  *     ...
@@ -44,10 +45,12 @@ public record ProfessionTradesFile(
             Codec.unboundedMap(Codec.STRING, LevelTrades.CODEC).optionalFieldOf("levels", Map.of()).forGetter(ProfessionTradesFile::levels)
     ).apply(instance, ProfessionTradesFile::new));
 
-    public record LevelTrades(List<TradeEntry> random, List<TradeEntry> guaranteed, Optional<TradeEntry> levelUp) {
+    public record LevelTrades(List<TradeEntry> random, List<TradeEntry> guaranteed,
+                              List<List<TradeEntry>> guaranteedOneOf, Optional<TradeEntry> levelUp) {
         public static final Codec<LevelTrades> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 TradeEntry.CODEC.listOf().optionalFieldOf("random", List.of()).forGetter(LevelTrades::random),
                 TradeEntry.CODEC.listOf().optionalFieldOf("guaranteed", List.of()).forGetter(LevelTrades::guaranteed),
+                TradeEntry.CODEC.listOf().listOf().optionalFieldOf("guaranteed_one_of", List.of()).forGetter(LevelTrades::guaranteedOneOf),
                 TradeEntry.CODEC.optionalFieldOf("level_up").forGetter(LevelTrades::levelUp)
         ).apply(instance, LevelTrades::new));
     }
