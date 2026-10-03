@@ -21,8 +21,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 @Mixin(VillagerEntity.class)
-public abstract class VillagerEntityMixin extends MerchantEntity {
+public abstract class VillagerBreedingMixin extends MerchantEntity {
 
     @Shadow private int foodLevel;
 
@@ -36,13 +38,13 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
     @Unique private static final int DIAMOND_FOOD_VALUE = 12;
     @Unique private static final double FOLLOW_RANGE = 10.0;
     @Unique private static final float FOLLOW_SPEED = 0.6f;
+    @Unique private static final double GROUND_RANGE = 16.0;
 
-    public VillagerEntityMixin(EntityType<? extends MerchantEntity> entityType, World world) {
+    public VillagerBreedingMixin(EntityType<? extends MerchantEntity> entityType, World world) {
         super(entityType, world);
     }
 
     // Instead of the vanilla foods for villagers, only diamonds count now
-    // This also makes isReadyToBreed() and lacksFood() work off diamonds.
     @Inject(method = "getAvailableFood", at = @At("HEAD"), cancellable = true)
     private void onlyDiamondsAreFood(CallbackInfoReturnable<Integer> cir) {
         int newValue = this.getInventory().count(Items.DIAMOND) * DIAMOND_FOOD_VALUE;
@@ -113,18 +115,43 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
             if (!player.isCreative()) {
                 stack.decrement(1);
             }
-
+            this.sayNo();
             this.produceParticles(ParticleTypes.HAPPY_VILLAGER);
         }
 
         cir.setReturnValue(ActionResult.success(client));
     }
 
-    // Follow a player holding a diamond
+    // Go for a diamond thrown on the ground or follow a player holding one
     @Inject(method = "mobTick", at = @At("TAIL"))
-    private void tryFollowDiamondHolder(CallbackInfo ci) {
+    private void seekOrFollowDiamond(CallbackInfo ci) {
         if (this.isSleeping() || this.hasCustomer() || this.getBrain().hasActivity(Activity.PANIC)) return;
 
+        // A diamond on the ground wins over following a player
+        List<ItemEntity> diamonds = this.getWorld().getEntitiesByClass(
+                ItemEntity.class,
+                this.getBoundingBox().expand(GROUND_RANGE, 4.0, GROUND_RANGE),
+                e -> e.isAlive() && e.getStack().isOf(Items.DIAMOND) && this.canGather(e.getStack())
+        );
+
+        if (!diamonds.isEmpty()) {
+            ItemEntity nearest = diamonds.getFirst();
+
+            for (ItemEntity e : diamonds) {
+                if (this.squaredDistanceTo(e) < this.squaredDistanceTo(nearest)) {
+                    nearest = e;
+                }
+            }
+            this.getBrain().remember(MemoryModuleType.LOOK_TARGET, new EntityLookTarget(nearest, true));
+            this.getBrain().remember(
+                    MemoryModuleType.WALK_TARGET,
+                    new WalkTarget(new EntityLookTarget(nearest, false), FOLLOW_SPEED, 0)
+            );
+
+            return;
+        }
+
+        // Otherwise follow a player holding a diamond
         PlayerEntity player = this.getWorld().getClosestPlayer(
                 this.getX(), this.getY(), this.getZ(), FOLLOW_RANGE,
                 e -> e instanceof PlayerEntity p && !p.isSpectator() && p.isHolding(Items.DIAMOND)
