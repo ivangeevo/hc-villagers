@@ -204,6 +204,10 @@ public final class HCTradeLogic {
         HCTradeTable table = tableFor(villager);
         if (table == null) return false;
         HCTradeState st = state(villager);
+
+        // Lock the profession after a trade happens
+        st.locked = true;
+
         int level = villager.getVillagerData().getLevel();
         TradeOfferList offers = villager.getOffers();
 

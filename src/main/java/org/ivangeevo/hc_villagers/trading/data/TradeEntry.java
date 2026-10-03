@@ -45,10 +45,9 @@ public record TradeEntry(TradeItemSpec buy, Optional<TradeItemSpec> buy2, TradeI
             return Optional.empty();
         }
         return Optional.of(new Factory(
-                buyItem.get(), buy.count(), buy.resolveComponents(),
-                buy2Item.flatMap(item -> item)
-                        .map(item -> new Factory.Side(item, buy2.get().count(), buy2.get().resolveComponents())),
-                sellItem.get(), sell.count(), sell.resolveComponents()));
+                buyItem.get(), buy.count(), buy,
+                buy2Item.flatMap(item -> item).map(item -> new Factory.Side(item, buy2.get().count(), buy2.get())),
+                sellItem.get(), sell.count(), sell));
     }
 
     private static Optional<Item> resolve(TradeItemSpec spec, String where) {
@@ -62,22 +61,23 @@ public record TradeEntry(TradeItemSpec buy, Optional<TradeItemSpec> buy2, TradeI
 
     /** Creates a fresh offer with rolled counts every time a trade slot is filled. */
     private record Factory(
-            Item buy, CountRange buyCount, ComponentChanges buyComponents, Optional<Side> buy2,
-            Item sell, CountRange sellCount, ComponentChanges sellComponents
+            Item buy, CountRange buyCount, TradeItemSpec buySpec, Optional<Side> buy2,
+            Item sell, CountRange sellCount, TradeItemSpec sellSpec
     ) implements TradeOffers.Factory {
 
-        private record Side(Item item, CountRange count, ComponentChanges components) {}
+        private record Side(Item item, CountRange count, TradeItemSpec spec) {}
 
         @Override
         public TradeOffer create(Entity entity, Random random) {
-            TradedItem first = traded(buy, buyCount.roll(random, buy.getMaxCount()), buyComponents);
+            var lookup = entity.getRegistryManager();
+
+            TradedItem first = traded(buy, buyCount.roll(random, buy.getMaxCount()), buySpec.resolveComponents(lookup));
             Optional<TradedItem> second = buy2.map(side ->
-                    traded(side.item(), side.count().roll(random, side.item().getMaxCount()), side.components()));
+                    traded(side.item(), side.count().roll(random, side.item().getMaxCount()), side.spec().resolveComponents(lookup)));
 
             ItemStack result = new ItemStack(sell, sellCount.roll(random, sell.getMaxCount()));
-            result.applyChanges(sellComponents);
+            result.applyChanges(sellSpec.resolveComponents(lookup));
 
-            // maxUses / xp are overwritten by HCTradeLogic.retag()
             return new TradeOffer(first, second, result, 1, 0, PRICE_MULTIPLIER);
         }
 

@@ -1,176 +1,150 @@
 package org.ivangeevo.hc_villagers.mixin;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.ai.brain.task.*;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.village.*;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Set;
 
 @Mixin(VillagerEntity.class)
 public abstract class VillagerEntityMixin extends MerchantEntity {
 
     @Shadow private int foodLevel;
-    @Shadow @Final private static Set<Item> GATHERABLE_ITEMS;
-    @Shadow protected abstract boolean lacksFood();
-    @Shadow public abstract VillagerData getVillagerData();
-    @Shadow public abstract boolean isReadyToBreed();
+
+    @Shadow public abstract Brain<VillagerEntity> getBrain();
+    @Shadow protected abstract void sayNo();
+
+    @Shadow public abstract boolean canGather(ItemStack stack);
+
+    /** Food a villager needs to breed (vanilla: 12). One diamond = exactly one breeding **/
+    @Unique private static final int BREEDING_FOOD = 12;
+    @Unique private static final int DIAMOND_FOOD_VALUE = 12;
+    @Unique private static final double FOLLOW_RANGE = 10.0;
+    @Unique private static final float FOLLOW_SPEED = 0.6f;
 
     public VillagerEntityMixin(EntityType<? extends MerchantEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    // BTW makes villagers require diamonds to breed.
-    // 24 is the max hunger value for villagers, so we set it to that
-    @Unique private static final int DIAMOND_FOOD_VALUE = 24;
-
-    // Makes each added trade offer to only add 1 item in the list instead of the default 2
-    @ModifyArg(method = "fillRecipes",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/entity/passive/VillagerEntity;fillRecipesFromPool(Lnet/minecraft/village/TradeOfferList;[Lnet/minecraft/village/TradeOffers$Factory;I)V"),
-                    index = 2
-    )
-    private int modifyShowedRecipesCount(int par3) {
-        return 1;
+    // Instead of the vanilla foods for villagers, only diamonds count now
+    // This also makes isReadyToBreed() and lacksFood() work off diamonds.
+    @Inject(method = "getAvailableFood", at = @At("HEAD"), cancellable = true)
+    private void onlyDiamondsAreFood(CallbackInfoReturnable<Integer> cir) {
+        int newValue = this.getInventory().count(Items.DIAMOND) * DIAMOND_FOOD_VALUE;
+        cir.setReturnValue(newValue);
     }
 
-    // Not working properly
-    // Tried to make it so that only the last offer in the list gives xp to the villager.
-    //@Inject(method = "afterUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/random/Random;nextInt(I)I", shift = At.Shift.AFTER), cancellable = true)
-    private void beforeSetExperience(TradeOffer offer, CallbackInfo ci) {
-        VillagerEntity villager = (VillagerEntity)(Object)this;
-
-        VillagerData data = villager.getVillagerData();
-        int villagerLevel = data.getLevel();
-        VillagerProfession profession = data.getProfession();
-
-        TradeOfferList offers = villager.getOffers();
-        int offerIndex = offers.indexOf(offer);
-        if (offerIndex == -1) return; // shouldn't happen
-
-        Int2ObjectMap<TradeOffers.Factory[]> profMap =
-                TradeOffers.PROFESSION_TO_LEVELED_TRADE.get(profession);
-        if (profMap == null) return;
-
-        // Find the level that this offer index falls into
-        int cumulative = 0;
-        int offerLevel = 1;
-        for (int level = 1; level <= 5; level++) {
-            TradeOffers.Factory[] factories = profMap.get(level);
-            if (factories == null) continue;
-            cumulative += factories.length;
-            if (offerIndex < cumulative) {
-                offerLevel = level;
-                break;
-            }
-        }
-
-        if (offerLevel != villagerLevel) {
-            // Not current tier — no XP
-            ci.cancel();
-        }
-
-    }
-
-    //@Inject(method = "interactMob", at = @At("HEAD"), cancellable = true)
-    private void onInteractMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        ItemStack handStack = player.getStackInHand(hand);
-
-        if (lacksFood() && handStack.isOf(Items.DIAMOND)) {
+    // Consume the diamond and set the food value enough to produce a baby
+    @Inject(method = "consumeAvailableFood", at = @At("HEAD"), cancellable = true)
+    private void consumeDiamonds(CallbackInfo ci) {
+        SimpleInventory inventory = this.getInventory();
+        while (this.foodLevel < BREEDING_FOOD && inventory.count(Items.DIAMOND) > 0) {
+            inventory.removeItem(Items.DIAMOND, 1);
             this.foodLevel += DIAMOND_FOOD_VALUE;
-            handStack.decrement(1);
-            this.produceParticles(ParticleTypes.HAPPY_VILLAGER);
-            cir.setReturnValue(ActionResult.SUCCESS);
         }
-
-    }
-
-    //@Inject(method = "getAvailableFood", at = @At("HEAD"), cancellable = true)
-    private void customGetAvailableFood(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(DIAMOND_FOOD_VALUE);
-    }
-
-    //@Inject(method = "canGather", at = @At("RETURN"), cancellable = true)
-    private void canGatherDiamond(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        boolean originalConditions = GATHERABLE_ITEMS.contains(stack.getItem()) || this.getVillagerData().getProfession().gatherableItems().contains(stack.getItem()) && this.getInventory().canInsert(stack);
-        cir.setReturnValue(stack.isOf(Items.DIAMOND) || originalConditions);
-    }
-
-
-    @Unique
-    private static ImmutableList<Pair<Integer, ? extends Task<? super VillagerEntity>>> createDiamondFollowTask(float speed) {
-        return ImmutableList.of(
-                Pair.of(0, new MoveToTargetTask(80, 120)), createFreeFollowTask(),
-                Pair.of(5, PlayWithVillagerBabiesTask.create()),
-                Pair.of(
-                        5, new RandomTask<>(ImmutableMap.of(MemoryModuleType.VISIBLE_VILLAGER_BABIES, MemoryModuleState.VALUE_ABSENT), ImmutableList.of(Pair.of(FindEntityTask.create(EntityType.VILLAGER, 8, MemoryModuleType.INTERACTION_TARGET, speed, 2), 2),
-                                Pair.of(FindEntityTask.create(EntityType.CAT, 8, MemoryModuleType.INTERACTION_TARGET, speed, 2), 1),
-                                Pair.of(FindWalkTargetTask.create(speed), 1),
-                                Pair.of(GoTowardsLookTargetTask.create(speed, 2), 1),
-                                Pair.of(new JumpInBedTask(speed), 2),
-                                Pair.of(new WaitTask(20, 40), 2))
-                        )),
-                Pair.of(99, ScheduleActivityTask.create())
-        );
-    }
-
-    private static Pair<Integer, Task<LivingEntity>> createFreeFollowTask() {
-        return Pair.of(5, new RandomTask(ImmutableList.of(Pair.of(LookAtMobTask.create(EntityType.CAT, 8.0f), 8), Pair.of(LookAtMobTask.create(EntityType.VILLAGER, 8.0f), 2), Pair.of(LookAtMobTask.create(EntityType.PLAYER, 8.0f), 2), Pair.of(LookAtMobTask.create(SpawnGroup.CREATURE, 8.0f), 1), Pair.of(LookAtMobTask.create(SpawnGroup.WATER_CREATURE, 8.0f), 1), Pair.of(LookAtMobTask.create(SpawnGroup.AXOLOTLS, 8.0f), 1), Pair.of(LookAtMobTask.create(SpawnGroup.UNDERGROUND_WATER_CREATURE, 8.0f), 1), Pair.of(LookAtMobTask.create(SpawnGroup.WATER_AMBIENT, 8.0f), 1), Pair.of(LookAtMobTask.create(SpawnGroup.MONSTER, 8.0f), 1), Pair.of(new WaitTask(30, 60), 2))));
-    }
-
-    @Inject(method = "consumeAvailableFood()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/VillagerEntity;getInventory()Lnet/minecraft/inventory/SimpleInventory;", ordinal = 0), cancellable = true)
-    private void injected(CallbackInfo ci) {
-        for (int i = 0; i < this.getInventory().size(); ++i) {
-            ItemStack itemStack = this.getInventory().getStack(i);
-            if (itemStack.isEmpty()) continue;
-            for (int k = itemStack.getCount(); k > 0; --k) {
-                this.foodLevel += DIAMOND_FOOD_VALUE;
-                this.getInventory().removeStack(i, 1);
-                if (this.lacksFood()) continue;
-                return;
-            }
-        }
-
         ci.cancel();
     }
 
-    /**
-    @Override
-    protected void initGoals() {
-        if (isSleeping()) {
-            this.goalSelector.remove(new TemptGoal(this, 0.60, (stack -> stack.isOf(Items.DIAMOND)), true));
-        } else {
-            this.goalSelector.add(1, new TemptGoal(this, 0.60, (stack) -> stack.isOf(Items.DIAMOND), true));
+    // Set diamonds to be a valid gatherable item
+    @Inject(method = "canGather", at = @At("RETURN"), cancellable = true)
+    private void canGatherDiamond(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+        if (stack.isOf(Items.DIAMOND) ) {
+            cir.setReturnValue(!isFed() && this.getInventory().canInsert(stack));
         }
     }
-    **/
 
+    // Take only one item from a thrown stack
+    @Inject(method = "loot", at = @At("HEAD"), cancellable = true)
+    private void onLootDiamond(ItemEntity item, CallbackInfo ci) {
+        ItemStack stack = item.getStack();
+
+        if (!stack.isOf(Items.DIAMOND)) return;
+
+        if (this.canGather(stack) && this.getInventory().addStack(stack.copyWithCount(1)).isEmpty()) {
+            this.triggerItemPickedUpByEntityCriteria(item);
+            this.sendPickup(item, 1);
+            stack.decrement(1);
+            if (stack.isEmpty()) {
+                item.discard();
+            }
+        }
+        ci.cancel(); // skip vanilla behavior for diamonds
+    }
+
+    // Set giving a diamond to a villager for breeding to only work when shift-clicking on them with it
+    @Inject(method = "interactMob", at = @At("HEAD"), cancellable = true)
+    private void onShiftInteractMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+        ItemStack stack = player.getStackInHand(hand);
+
+        if (!player.isSneaking() || !stack.isOf(Items.DIAMOND) || this.isBaby()) return;
+
+        boolean client = this.getWorld().isClient;
+        if (isFed()) {
+            if (!client) {
+                this.sayNo();
+            }
+            cir.setReturnValue(ActionResult.success(client));
+            return;
+        }
+
+        if (!client) {
+            ItemStack leftover = this.getInventory().addStack(stack.copyWithCount(1));
+
+            if (!leftover.isEmpty()) {
+                cir.setReturnValue(ActionResult.FAIL);
+                return;
+            }
+
+            if (!player.isCreative()) {
+                stack.decrement(1);
+            }
+
+            this.produceParticles(ParticleTypes.HAPPY_VILLAGER);
+        }
+
+        cir.setReturnValue(ActionResult.success(client));
+    }
+
+    // Follow a player holding a diamond
+    @Inject(method = "mobTick", at = @At("TAIL"))
+    private void tryFollowDiamondHolder(CallbackInfo ci) {
+        if (this.isSleeping() || this.hasCustomer() || this.getBrain().hasActivity(Activity.PANIC)) return;
+
+        PlayerEntity player = this.getWorld().getClosestPlayer(
+                this.getX(), this.getY(), this.getZ(), FOLLOW_RANGE,
+                e -> e instanceof PlayerEntity p && !p.isSpectator() && p.isHolding(Items.DIAMOND)
+        );
+
+        if (player == null) return;
+
+        this.getBrain().remember(MemoryModuleType.LOOK_TARGET, new EntityLookTarget(player, true));
+
+        if (this.squaredDistanceTo(player) > 9.0) {
+            this.getBrain().remember(
+                    MemoryModuleType.WALK_TARGET,
+                    new WalkTarget(new EntityLookTarget(player, false), FOLLOW_SPEED, 2)
+            );
+        }
+    }
+
+    @Unique
+    private boolean isFed() {
+        return this.foodLevel + this.getInventory().count(Items.DIAMOND) * DIAMOND_FOOD_VALUE >= BREEDING_FOOD;
+    }
 
 }

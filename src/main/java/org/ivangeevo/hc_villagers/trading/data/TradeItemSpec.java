@@ -9,6 +9,8 @@ import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.ComponentType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryOps;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.dynamic.Codecs;
 import org.ivangeevo.hc_villagers.HCVillagersMod;
@@ -40,33 +42,32 @@ public record TradeItemSpec(Identifier item, Optional<Identifier> fallback, Coun
         return fallback.flatMap(Registries.ITEM::getOrEmpty);
     }
 
-    public ComponentChanges resolveComponents() {
-        // Use the fallback's components only when the primary item isn't registered
+    public ComponentChanges resolveComponents(RegistryWrapper.WrapperLookup lookup) {
         Map<Identifier, JsonElement> source =
                 Registries.ITEM.getOrEmpty(item).isPresent() ? components : fallbackComponents;
         if (source.isEmpty()) return ComponentChanges.EMPTY;
 
-        if (components.isEmpty()) return ComponentChanges.EMPTY;
+        RegistryOps<JsonElement> ops = RegistryOps.of(JsonOps.INSTANCE, lookup);
         ComponentChanges.Builder builder = ComponentChanges.builder();
-        components.forEach((id, json) -> {
+        source.forEach((id, json) -> {
             Optional<ComponentType<?>> type = Registries.DATA_COMPONENT_TYPE.getOrEmpty(id);
             if (type.isEmpty()) {
                 HCVillagersMod.LOGGER.debug("[{}] Ignoring unknown component '{}'", HCVillagersMod.MOD_ID, id);
                 return;
             }
-            add(builder, type.get(), json, id);
+            add(builder, type.get(), json, id, ops);
         });
         return builder.build();
     }
 
-    private static <T> void add(ComponentChanges.Builder builder, ComponentType<T> type, JsonElement json, Identifier id) {
+    private static <T> void add(ComponentChanges.Builder builder, ComponentType<T> type, JsonElement json,
+                                Identifier id, RegistryOps<JsonElement> ops) {
         Codec<T> codec = type.getCodec();
         if (codec == null) {
-            // transient components (not serializable) can't come from JSON
             HCVillagersMod.LOGGER.debug("[{}] Component '{}' can't be loaded from JSON", HCVillagersMod.MOD_ID, id);
             return;
         }
-        codec.parse(JsonOps.INSTANCE, json)
+        codec.parse(ops, json)
                 .resultOrPartial(err -> HCVillagersMod.LOGGER.warn("[{}] Bad value for component '{}': {}",
                         HCVillagersMod.MOD_ID, id, err))
                 .ifPresent(value -> builder.add(type, value));

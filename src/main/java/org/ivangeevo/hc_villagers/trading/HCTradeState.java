@@ -14,6 +14,7 @@ public final class HCTradeState {
     private static final String LEVEL_UP_READY = "LevelUpReady";
     private static final String KINDS = "Kinds";
     private static final String SLOT_LEVELS = "SlotLevels";
+    private static final String LOCKED = "Locked";
 
     /** "+" trades done at the current level. */
     public int plusDone;
@@ -26,6 +27,9 @@ public final class HCTradeState {
 
     /** Chosen alternative for each exclusive group, flattened in level order then group order. */
     public final IntArrayList exclusivePicks = new IntArrayList();
+
+    /** Once true, the villager keeps it's profession even if it's workstation is removed. **/
+    public boolean locked;
 
     // Runtime only: changes queued by a trade and applied on the villager's next tick
     public final IntArrayList pendingRerolls = new IntArrayList();
@@ -53,6 +57,7 @@ public final class HCTradeState {
         slotLevels.clear();
         exclusivePicks.clear();
         pendingRerolls.clear();
+        locked = false;
         pendingLevelUp = false;
         dirty = false;
     }
@@ -63,6 +68,7 @@ public final class HCTradeState {
         nbt.putBoolean(LEVEL_UP_READY, levelUpReady);
         nbt.putIntArray(KINDS, kinds.toIntArray());
         nbt.putIntArray(SLOT_LEVELS, slotLevels.toIntArray());
+        nbt.putBoolean(LOCKED, locked);
         return nbt;
     }
 
@@ -72,5 +78,6 @@ public final class HCTradeState {
         levelUpReady = nbt.getBoolean(LEVEL_UP_READY);
         kinds.addElements(0, nbt.getIntArray(KINDS));
         slotLevels.addElements(0, nbt.getIntArray(SLOT_LEVELS));
+        locked = nbt.getBoolean(LOCKED);
     }
 }
