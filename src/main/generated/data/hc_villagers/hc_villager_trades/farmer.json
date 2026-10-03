@@ -1,0 +1,23 @@
+{
+  "levels": {
+    "1": "hc_villagers:farmer/level_1",
+    "2": "hc_villagers:farmer/level_2",
+    "3": "hc_villagers:farmer/level_3",
+    "4": "hc_villagers:farmer/level_4",
+    "5": "hc_villagers:farmer/level_5"
+  },
+  "profession": "minecraft:farmer",
+  "required": [
+    5,
+    7,
+    10,
+    15
+  ],
+  "slots": [
+    1,
+    4,
+    5,
+    7,
+    8
+  ]
+}

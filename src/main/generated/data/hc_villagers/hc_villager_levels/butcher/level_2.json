@@ -1,0 +1,105 @@
+{
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:stonecutter",
+      "item": "bwt:saw"
+    },
+    "sell": {
+      "count": 2,
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          4,
+          6
+        ],
+        "item": "minecraft:leather"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          16,
+          24
+        ],
+        "fallback": "minecraft:wheat",
+        "item": "bwt:flour"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          48,
+          64
+        ],
+        "fallback": "minecraft:spruce_wood",
+        "item": "sturdy_trees:bark_spruce"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          10,
+          16
+        ],
+        "fallback": "minecraft:rotten_flesh",
+        "item": "bwt:dung"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "fallback": "minecraft:rabbit_stew",
+        "item": "self_sustainable:sandwich"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "fallback": "minecraft:mushroom_stew",
+        "item": "self_sustainable:chowder"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "fallback": "minecraft:cooked_rabbit",
+        "item": "self_sustainable:ham_and_eggs"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "fallback": "minecraft:cooked_porkchop",
+        "item": "self_sustainable:steak_and_potatoes"
+      }
+    }
+  ]
+}

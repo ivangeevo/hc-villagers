@@ -1,0 +1,102 @@
+{
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:iron_block",
+      "item": "bwt:water_wheel"
+    },
+    "sell": {
+      "count": 3,
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          8,
+          12
+        ],
+        "item": "minecraft:melon"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          8,
+          12
+        ],
+        "item": "minecraft:pumpkin"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "fallback": "minecraft:cookie",
+        "item": "vegehenna:chocolate"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:shears"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:flint_and_steel"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "fallback": "minecraft:slime_ball",
+        "item": "bwt:soap"
+      },
+      "sell": {
+        "count": 2,
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 3,
+        "item": "minecraft:bread"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 3,
+        "fallback": "minecraft:cooked_chicken",
+        "item": "self_sustainable:egg_scrambled_cooked"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 3,
+        "fallback": "minecraft:mushroom_stew",
+        "item": "self_sustainable:mushroom_omelette_cooked"
+      }
+    }
+  ]
+}

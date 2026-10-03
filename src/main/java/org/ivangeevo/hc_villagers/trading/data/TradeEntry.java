@@ -2,8 +2,13 @@ package org.ivangeevo.hc_villagers.trading.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.component.ComponentChanges;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.predicate.ComponentPredicate;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.entity.Entity;
 import net.minecraft.village.TradeOffer;
@@ -30,13 +35,8 @@ public record TradeEntry(TradeItemSpec buy, Optional<TradeItemSpec> buy2, TradeI
             TradeItemSpec.CODEC.fieldOf("sell").forGetter(TradeEntry::sell)
     ).apply(instance, TradeEntry::new));
 
-    /** Price multiplier used by vanilla demand pricing; BTW trades don't restock, so this barely matters. */
     private static final float PRICE_MULTIPLIER = 0.05F;
 
-    /**
-     * Resolves the item IDs (registries are complete when data packs load) and builds the factory.
-     * Empty if an item and its fallback are both missing.
-     */
     public Optional<TradeOffers.Factory> toFactory(String where) {
         Optional<Item> buyItem = resolve(buy, where);
         Optional<Item> sellItem = resolve(sell, where);
@@ -45,9 +45,10 @@ public record TradeEntry(TradeItemSpec buy, Optional<TradeItemSpec> buy2, TradeI
             return Optional.empty();
         }
         return Optional.of(new Factory(
-                buyItem.get(), buy.count(),
-                buy2Item.flatMap(item -> item).map(item -> new Factory.Side(item, buy2.get().count())),
-                sellItem.get(), sell.count()));
+                buyItem.get(), buy.count(), buy.resolveComponents(),
+                buy2Item.flatMap(item -> item)
+                        .map(item -> new Factory.Side(item, buy2.get().count(), buy2.get().resolveComponents())),
+                sellItem.get(), sell.count(), sell.resolveComponents()));
     }
 
     private static Optional<Item> resolve(TradeItemSpec spec, String where) {
@@ -60,18 +61,39 @@ public record TradeEntry(TradeItemSpec buy, Optional<TradeItemSpec> buy2, TradeI
     }
 
     /** Creates a fresh offer with rolled counts every time a trade slot is filled. */
-    private record Factory(Item buy, CountRange buyCount, Optional<Side> buy2, Item sell, CountRange sellCount)
-            implements TradeOffers.Factory {
+    private record Factory(
+            Item buy, CountRange buyCount, ComponentChanges buyComponents, Optional<Side> buy2,
+            Item sell, CountRange sellCount, ComponentChanges sellComponents
+    ) implements TradeOffers.Factory {
 
-        private record Side(Item item, CountRange count) {}
+        private record Side(Item item, CountRange count, ComponentChanges components) {}
 
         @Override
         public TradeOffer create(Entity entity, Random random) {
-            TradedItem first = new TradedItem(buy, buyCount.roll(random, buy.getMaxCount()));
-            Optional<TradedItem> second = buy2.map(side -> new TradedItem(side.item(), side.count().roll(random, side.item().getMaxCount())));
+            TradedItem first = traded(buy, buyCount.roll(random, buy.getMaxCount()), buyComponents);
+            Optional<TradedItem> second = buy2.map(side ->
+                    traded(side.item(), side.count().roll(random, side.item().getMaxCount()), side.components()));
+
             ItemStack result = new ItemStack(sell, sellCount.roll(random, sell.getMaxCount()));
+            result.applyChanges(sellComponents);
+
             // maxUses / xp are overwritten by HCTradeLogic.retag()
             return new TradeOffer(first, second, result, 1, 0, PRICE_MULTIPLIER);
+        }
+
+        /** Buy side: components become a predicate the player's item must match. */
+        private static TradedItem traded(Item item, int count, ComponentChanges changes) {
+            if (changes.isEmpty()) return new TradedItem(item, count);
+            ComponentMap.Builder builder = ComponentMap.builder();
+            for (var entry : changes.entrySet()) {
+                entry.getValue().ifPresent(value -> put(builder, entry.getKey(), value));
+            }
+            return new TradedItem(Registries.ITEM.getEntry(item), count, ComponentPredicate.of(builder.build()));
+        }
+
+        @SuppressWarnings("unchecked")
+        private static <T> void put(ComponentMap.Builder builder, ComponentType<T> type, Object value) {
+            builder.add(type, (T) value);
         }
     }
 }

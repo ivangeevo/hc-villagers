@@ -1,0 +1,133 @@
+{
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:lead",
+      "item": "bwt:breeding_harness"
+    },
+    "sell": {
+      "count": 3,
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          10,
+          16
+        ],
+        "item": "minecraft:carrot"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          10,
+          16
+        ],
+        "item": "minecraft:potato"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "fallback": "minecraft:cooked_beef",
+        "item": "btwr:beast_liver_cooked"
+      },
+      "sell": {
+        "count": 2,
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:saddle"
+      },
+      "sell": {
+        "count": 2,
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          2,
+          3
+        ],
+        "fallback": "minecraft:cooked_mutton",
+        "item": "bwt:wolf_chop"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "fallback": "minecraft:cake",
+        "item": "self_sustainable:steak_dinner"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "fallback": "minecraft:cake",
+        "item": "self_sustainable:pork_dinner"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "fallback": "minecraft:cake",
+        "item": "self_sustainable:wolf_dinner"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "fallback": "minecraft:honey_bottle",
+        "item": "self_sustainable:chicken_soup"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "fallback": "minecraft:honey_bottle",
+        "item": "self_sustainable:cooked_kebab"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": [
+          4,
+          6
+        ],
+        "fallback": "minecraft:rabbit_hide",
+        "item": "bwt:tanned_leather"
+      }
+    }
+  ]
+}

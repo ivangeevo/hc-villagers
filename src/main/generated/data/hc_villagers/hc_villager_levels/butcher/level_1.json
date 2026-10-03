@@ -1,0 +1,126 @@
+{
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:cauldron",
+      "item": "bwt:cauldron"
+    },
+    "sell": {
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          16,
+          24
+        ],
+        "item": "minecraft:arrow"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:shears"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:fishing_rod"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:bow"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          16,
+          24
+        ],
+        "fallback": "minecraft:ladder",
+        "item": "bwt:rope"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "fallback": "minecraft:rabbit",
+        "item": "animageddon:cheval"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "item": "minecraft:beef"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 2,
+        "item": "minecraft:porkchop"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 3,
+        "item": "minecraft:mutton"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 3,
+        "item": "minecraft:cod"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 3,
+        "item": "minecraft:salmon"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": 3,
+        "item": "minecraft:chicken"
+      }
+    }
+  ]
+}

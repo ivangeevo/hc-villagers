@@ -1,0 +1,140 @@
+{
+  "guaranteed": [
+    {
+      "buy": {
+        "count": [
+          6,
+          8
+        ],
+        "item": "minecraft:emerald"
+      },
+      "buy_2": {
+        "item": "minecraft:skeleton_skull"
+      },
+      "sell": {
+        "fallback": "minecraft:wither_skeleton_skull",
+        "item": "btwr_ds:runed_skull"
+      }
+    }
+  ],
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:anvil",
+      "item": "bwt_hct:chopping_block"
+    },
+    "sell": {
+      "count": 4,
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          2,
+          3
+        ],
+        "fallback": "minecraft:turtle_scute",
+        "item": "btwr:mystery_meat_cooked"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "fallback": "minecraft:tripwire_hook",
+        "item": "bwt:screw"
+      },
+      "sell": {
+        "count": [
+          2,
+          3
+        ],
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "fallback": "minecraft:crossbow",
+        "item": "bwt:composite_bow"
+      },
+      "sell": {
+        "count": [
+          2,
+          3
+        ],
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:lead"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "fallback": "minecraft:golden_carrot",
+        "item": "self_sustainable:hearty_stew"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          3,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "fallback": "minecraft:leather_helmet",
+        "item": "btwr:leather_tanned_helmet"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          6,
+          8
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "fallback": "minecraft:leather_chestplate",
+        "item": "btwr:leather_tanned_chestplate"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          4,
+          6
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "fallback": "minecraft:leather_leggings",
+        "item": "btwr:leather_tanned_leggings"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          2,
+          3
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "fallback": "minecraft:leather_boots",
+        "item": "btwr:leather_tanned_boots"
+      }
+    }
+  ]
+}

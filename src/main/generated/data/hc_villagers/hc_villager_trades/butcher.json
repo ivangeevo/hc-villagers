@@ -1,0 +1,23 @@
+{
+  "levels": {
+    "1": "hc_villagers:butcher/level_1",
+    "2": "hc_villagers:butcher/level_2",
+    "3": "hc_villagers:butcher/level_3",
+    "4": "hc_villagers:butcher/level_4",
+    "5": "hc_villagers:butcher/level_5"
+  },
+  "profession": "minecraft:butcher",
+  "required": [
+    5,
+    7,
+    10,
+    15
+  ],
+  "slots": [
+    1,
+    4,
+    5,
+    7,
+    8
+  ]
+}

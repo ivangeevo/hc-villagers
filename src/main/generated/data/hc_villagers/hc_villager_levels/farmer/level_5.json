@@ -1,0 +1,44 @@
+{
+  "guaranteed": [
+    {
+      "buy": {
+        "count": [
+          12,
+          16
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "item": "minecraft:mycelium"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          48,
+          64
+        ],
+        "item": "minecraft:emerald"
+      },
+      "buy_2": {
+        "item": "minecraft:paper"
+      },
+      "sell": {
+        "components": {
+          "infernal_enchanting:arcane_enchantment": {
+            "enchantment": "minecraft:looting"
+          }
+        },
+        "fallback": "minecraft:enchanted_book",
+        "fallback_components": {
+          "minecraft:stored_enchantments": {
+            "levels": {
+              "minecraft:looting": 1
+            }
+          }
+        },
+        "item": "infernal_enchanting:arcane_tome"
+      }
+    }
+  ]
+}

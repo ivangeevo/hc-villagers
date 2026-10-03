@@ -59,12 +59,9 @@ dependencies {
     modImplementation "maven.modrinth:btwr-shared-library:${project.btwr_sl_version}"
     //modImplementation files("libs/btwr-shared-lib-${project.btwr_sl_version}.jar")
 
-    // BTWR-related mods are optional: compile-only, so they are not pulled into runtime or published dependencies.
-    // Trades look their items up by registry ID (see ModItemRef) and fall back to vanilla items when a mod is missing.
-    // To test WITH these mods in runClient, add the same coordinates as modLocalRuntime.
-
+    // BTWR-related mods
     modCompileOnly "maven.modrinth:btwr-core:${project.btwr_core_version}"
-    modCompileOnly "maven.modrinth:btwr-ds:${project.btwr_ds_version}"
+    //modCompileOnly "maven.modrinth:btwr-ds:${project.btwr_ds_version}"
     modCompileOnly "maven.modrinth:better-with-time:${project.bwt_version}"
     modCompileOnly "maven.modrinth:bwt-hc-tweaks:${project.bwt_hct_version}"
     modCompileOnly "maven.modrinth:sturdy-trees:${project.sturdy_trees_version}"
@@ -73,9 +70,10 @@ dependencies {
     modCompileOnly "maven.modrinth:vegehenna:${project.vegehenna_version}"
     modCompileOnly "maven.modrinth:animageddon:${project.animageddon_version}"
     modCompileOnly "maven.modrinth:granular-hunger:${project.granular_hunger_version}"
+    modCompileOnly "maven.modrinth:creeper-shearing:${project.creeper_shearing_version}-Fabric"
 
     modLocalRuntime "maven.modrinth:btwr-core:${project.btwr_core_version}"
-    modLocalRuntime "maven.modrinth:btwr-ds:${project.btwr_ds_version}"
+    //modLocalRuntime "maven.modrinth:btwr-ds:${project.btwr_ds_version}"
     modLocalRuntime "maven.modrinth:better-with-time:${project.bwt_version}"
     modLocalRuntime "maven.modrinth:bwt-hc-tweaks:${project.bwt_hct_version}"
     modLocalRuntime "maven.modrinth:sturdy-trees:${project.sturdy_trees_version}"
@@ -84,6 +82,11 @@ dependencies {
     modLocalRuntime "maven.modrinth:vegehenna:${project.vegehenna_version}"
     modLocalRuntime "maven.modrinth:animageddon:${project.animageddon_version}"
     modLocalRuntime "maven.modrinth:granular-hunger:${project.granular_hunger_version}"
+    modLocalRuntime "maven.modrinth:creeper-shearing:${project.creeper_shearing_version}-Fabric"
+
+    modCompileOnly files("libs/btwr_ds-${project.btwr_ds_version}-1.21.1.jar")
+    modLocalRuntime files("libs/btwr_ds-${project.btwr_ds_version}-1.21.1.jar")
+
 
 }
 

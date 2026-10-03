@@ -1,0 +1,98 @@
+{
+  "level_up": {
+    "buy": {
+      "item": "minecraft:iron_hoe"
+    },
+    "sell": {
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          48,
+          64
+        ],
+        "fallback": "minecraft:dirt",
+        "item": "tough_environment:dirt_loose"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          32,
+          48
+        ],
+        "item": "minecraft:oak_log"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          32,
+          48
+        ],
+        "item": "minecraft:spruce_log"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          32,
+          48
+        ],
+        "item": "minecraft:birch_log"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          32,
+          48
+        ],
+        "item": "minecraft:jungle_log"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          16,
+          24
+        ],
+        "fallback": "minecraft:brown_wool",
+        "item": "self_sustainable:brown_wool"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          32,
+          64
+        ],
+        "item": "minecraft:bone_meal"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    }
+  ]
+}

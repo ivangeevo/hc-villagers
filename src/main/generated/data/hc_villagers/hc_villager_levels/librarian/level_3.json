@@ -1,0 +1,91 @@
+{
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:anvil",
+      "item": "bwt_hct:dormant_soul_forge"
+    },
+    "buy_2": {
+      "item": "minecraft:nether_star"
+    },
+    "sell": {
+      "fallback": "minecraft:beacon",
+      "item": "bwt:soul_forge"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          16,
+          24
+        ],
+        "item": "minecraft:nether_wart"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          16,
+          24
+        ],
+        "item": "minecraft:glowstone_dust"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          48,
+          64
+        ],
+        "fallback": "minecraft:gunpowder",
+        "item": "animageddon:nitre"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          8,
+          12
+        ],
+        "fallback": "minecraft:phantom_membrane",
+        "item": "animageddon:bat_wing"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          12,
+          16
+        ],
+        "item": "minecraft:spider_eye"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          10,
+          16
+        ],
+        "item": "minecraft:glass_bottle"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "guaranteed": [
+    {
+      "buy": {
+        "count": [
+          48,
+          64
+        ],
+        "item": "minecraft:emerald"
+      },
+      "buy_2": {
+        "item": "minecraft:paper"
+      },
+      "sell": {
+        "components": {
+          "infernal_enchanting:arcane_enchantment": {
+            "enchantment": "minecraft:sharpness"
+          }
+        },
+        "fallback": "minecraft:enchanted_book",
+        "fallback_components": {
+          "minecraft:stored_enchantments": {
+            "levels": {
+              "minecraft:sharpness": 1
+            }
+          }
+        },
+        "item": "infernal_enchanting:arcane_tome"
+      }
+    }
+  ],
+  "random": [
+    {
+      "buy": {
+        "count": [
+          4,
+          6
+        ],
+        "fallback": "minecraft:blaze_powder",
+        "item": "bwt:dynamite"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:lightning_rod"
+      },
+      "buy_2": {
+        "fallback": "minecraft:slime_ball",
+        "item": "bwt:soap"
+      },
+      "sell": {
+        "count": [
+          3,
+          5
+        ],
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "fallback": "minecraft:netherite_axe",
+        "item": "bwt:battle_axe"
+      },
+      "sell": {
+        "count": [
+          3,
+          5
+        ],
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "fallback": "minecraft:ender_chest",
+        "item": "bwt:companion_cube"
+      },
+      "sell": {
+        "count": [
+          1,
+          2
+        ],
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          6,
+          10
+        ],
+        "fallback": "minecraft:spectral_arrow",
+        "item": "bwt:broadhead_arrow"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    }
+  ]
+}

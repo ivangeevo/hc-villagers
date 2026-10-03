@@ -1,0 +1,138 @@
+{
+  "guaranteed": [
+    {
+      "buy": {
+        "count": [
+          2,
+          3
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "fallback": "minecraft:sugar_cane",
+        "item": "vegehenna:sugar_cane_roots"
+      }
+    }
+  ],
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:iron_pickaxe",
+      "item": "bwt:mill_stone"
+    },
+    "sell": {
+      "count": 2,
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "item": "minecraft:milk_bucket"
+      },
+      "sell": {
+        "count": [
+          1,
+          2
+        ],
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          24,
+          32
+        ],
+        "fallback": "minecraft:wheat_seeds",
+        "item": "bwt:hemp_seeds"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          24,
+          32
+        ],
+        "item": "minecraft:sugar"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          10,
+          16
+        ],
+        "item": "minecraft:cocoa_beans"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          10,
+          16
+        ],
+        "item": "minecraft:brown_mushroom"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          16,
+          32
+        ],
+        "item": "minecraft:glass_pane"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          8,
+          12
+        ],
+        "item": "minecraft:egg"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": [
+          8,
+          16
+        ],
+        "item": "minecraft:wheat"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:apple"
+      }
+    }
+  ]
+}

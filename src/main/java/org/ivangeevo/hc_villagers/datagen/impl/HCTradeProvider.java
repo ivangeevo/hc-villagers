@@ -36,11 +36,11 @@ public abstract class HCTradeProvider implements DataProvider {
 
     @Override
     public CompletableFuture<?> run(DataWriter writer) {
-        List<ProfessionDefinition> defs = new ArrayList<>();
-        generate(defs::add);
+        List<ProfessionDefinition> definitions = new ArrayList<>();
+        generate(definitions::add);
 
         List<CompletableFuture<?>> futures = new ArrayList<>();
-        for (ProfessionDefinition def : defs) {
+        for (ProfessionDefinition def : definitions) {
             Map<String, Either<Identifier, LevelTrades>> levelEntries = new LinkedHashMap<>();
 
             for (Map.Entry<Integer, LevelDefinition> e : def.levels.entrySet()) {
@@ -69,6 +69,7 @@ public abstract class HCTradeProvider implements DataProvider {
 
     @Override
     public String getName() {
-        return "Villager Trades";
+        String type = getClass().getSimpleName();
+        return "Villager Trades ("+ type +")";
     }
 }

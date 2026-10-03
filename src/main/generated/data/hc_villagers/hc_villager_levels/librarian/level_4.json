@@ -1,0 +1,104 @@
+{
+  "guaranteed": [
+    {
+      "buy": {
+        "fallback": "minecraft:anvil",
+        "item": "bwt_hct:dormant_soulforge"
+      },
+      "buy_2": {
+        "item": "minecraft:nether_star"
+      },
+      "sell": {
+        "fallback": "minecraft:beacon",
+        "item": "bwt:soul_forge"
+      }
+    }
+  ],
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:spyglass",
+      "item": "btwr:ender_spectacles"
+    },
+    "sell": {
+      "count": 4,
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          8,
+          12
+        ],
+        "fallback": "minecraft:amethyst_shard",
+        "item": "animageddon:witch_wart"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          12,
+          16
+        ],
+        "fallback": "minecraft:slime_ball",
+        "item": "animageddon:mysterious_gland"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          8,
+          12
+        ],
+        "fallback": "minecraft:pufferfish",
+        "item": "animageddon:venom_sack"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          4,
+          6
+        ],
+        "item": "minecraft:ghast_tear"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          8,
+          12
+        ],
+        "item": "minecraft:magma_cream"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          32,
+          48
+        ],
+        "item": "minecraft:blaze_powder"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    }
+  ]
+}
