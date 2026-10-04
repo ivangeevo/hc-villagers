@@ -21,7 +21,7 @@
         "fallback_components": {
           "minecraft:stored_enchantments": {
             "levels": {
-              "minecraft:power": 3
+              "minecraft:power": 1
             }
           }
         },

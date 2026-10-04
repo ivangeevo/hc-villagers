@@ -165,14 +165,14 @@ public class ButcherTradesProvider extends HCTradeProvider {
         JsonObject stored = new JsonObject();
         stored.add("levels", levels);
 
-        ItemSpec sharpnessTomeOrBookLevel3 = ItemSpec.of("infernal_enchanting:arcane_tome")
+        ItemSpec sharpnessTomeOrBook = ItemSpec.of("infernal_enchanting:arcane_tome")
                 .component("infernal_enchanting:arcane_enchantment", tome)
                 .fallback(Items.ENCHANTED_BOOK)
                 .fallbackComponent("minecraft:stored_enchantments", stored);
 
         return new LevelDefinition()
                 .guaranteed(
-                        Trade.buy(Items.EMERALD, 48, 64).and(Items.PAPER).sell(sharpnessTomeOrBookLevel3)
+                        Trade.buy(Items.EMERALD, 48, 64).and(Items.PAPER).sell(sharpnessTomeOrBook)
                 )
                 .random(
                         Trade.buy(dynamiteOrBlazePowder).sell(Items.EMERALD),

@@ -126,18 +126,18 @@ public class LibrarianTradesProvider extends HCTradeProvider {
 
         // Stored level, for the book fallback only
         JsonObject levels = new JsonObject();
-        levels.addProperty("minecraft:power", 3);
+        levels.addProperty("minecraft:power", 1);
         JsonObject stored = new JsonObject();
         stored.add("levels", levels);
 
-        ItemSpec powerTomeOrBookLevel3 = ItemSpec.of("infernal_enchanting:arcane_tome")
+        ItemSpec powerTomeOrBook = ItemSpec.of("infernal_enchanting:arcane_tome")
                 .component("infernal_enchanting:arcane_enchantment", tome)
                 .fallback(Items.ENCHANTED_BOOK)
                 .fallbackComponent("minecraft:stored_enchantments", stored);
 
         return new LevelDefinition()
                 .guaranteed(
-                        Trade.buy(Items.EMERALD, 48, 64).and(Items.PAPER).sell(powerTomeOrBookLevel3),
+                        Trade.buy(Items.EMERALD, 48, 64).and(Items.PAPER).sell(powerTomeOrBook),
                         Trade.buy(Items.EMERALD, 6, 8).and(Items.ENDER_PEARL).sell(Items.ENDER_EYE)
                 )
                 .random(

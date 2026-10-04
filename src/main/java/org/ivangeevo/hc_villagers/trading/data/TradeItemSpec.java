@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.ComponentType;
 import net.minecraft.item.Item;
@@ -19,7 +20,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public record TradeItemSpec(Identifier item, Optional<Identifier> fallback, CountRange count,
-                            Map<Identifier, JsonElement> components, Map<Identifier, JsonElement> fallbackComponents) {
+                            Map<Identifier, JsonElement> components, Map<Identifier, JsonElement> fallbackComponents,
+                            Optional<CountRange> enchantLevels, Optional<String> requiredMod, Optional<CountRange> fallbackCount
+) {
 
     private static final Codec<TradeItemSpec> FULL_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Identifier.CODEC.fieldOf("item").forGetter(TradeItemSpec::item),
@@ -28,23 +31,38 @@ public record TradeItemSpec(Identifier item, Optional<Identifier> fallback, Coun
             Codec.unboundedMap(Identifier.CODEC, Codecs.JSON_ELEMENT)
                     .optionalFieldOf("components", Map.of()).forGetter(TradeItemSpec::components),
             Codec.unboundedMap(Identifier.CODEC, Codecs.JSON_ELEMENT)
-                    .optionalFieldOf("fallback_components", Map.of()).forGetter(TradeItemSpec::fallbackComponents)
+                    .optionalFieldOf("fallback_components", Map.of()).forGetter(TradeItemSpec::fallbackComponents),
+            CountRange.CODEC.optionalFieldOf("enchant_levels").forGetter(TradeItemSpec::enchantLevels),
+            Codec.STRING.optionalFieldOf("required_mod").forGetter(TradeItemSpec::requiredMod),
+            CountRange.CODEC.optionalFieldOf("fallback_count").forGetter(TradeItemSpec::fallbackCount)
     ).apply(instance, TradeItemSpec::new));
 
     public static final Codec<TradeItemSpec> CODEC = Codec.either(Identifier.CODEC, FULL_CODEC).xmap(
-            either -> either.map(id -> new TradeItemSpec(id, Optional.empty(), CountRange.ONE, Map.of(), Map.of()), spec -> spec),
+            either -> either.map(id -> new TradeItemSpec(
+                    id,
+                    Optional.empty(),
+                    CountRange.ONE,
+                    Map.of(),
+                    Map.of(),
+                    Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty()
+            ), spec -> spec),
             Either::right);
 
-    /** The item to use: {@code item} if registered, else {@code fallback} if registered, else empty. */
+    /** True if the primary item is usable; registered and the required mod (if any) is loaded **/
+    public boolean usesPrimary() {
+        return Registries.ITEM.getOrEmpty(item).isPresent()
+                && requiredMod.map(FabricLoader.getInstance()::isModLoaded).orElse(true);
+    }
+
     public Optional<Item> resolve() {
-        Optional<Item> primary = Registries.ITEM.getOrEmpty(item);
-        if (primary.isPresent()) return primary;
+        if (usesPrimary()) return Registries.ITEM.getOrEmpty(item);
         return fallback.flatMap(Registries.ITEM::getOrEmpty);
     }
 
     public ComponentChanges resolveComponents(RegistryWrapper.WrapperLookup lookup) {
-        Map<Identifier, JsonElement> source =
-                Registries.ITEM.getOrEmpty(item).isPresent() ? components : fallbackComponents;
+        Map<Identifier, JsonElement> source = usesPrimary() ? components : fallbackComponents;
         if (source.isEmpty()) return ComponentChanges.EMPTY;
 
         RegistryOps<JsonElement> ops = RegistryOps.of(JsonOps.INSTANCE, lookup);
@@ -71,5 +89,10 @@ public record TradeItemSpec(Identifier item, Optional<Identifier> fallback, Coun
                 .resultOrPartial(err -> HCVillagersMod.LOGGER.warn("[{}] Bad value for component '{}': {}",
                         HCVillagersMod.MOD_ID, id, err))
                 .ifPresent(value -> builder.add(type, value));
+    }
+
+    /** Count for whichever item is actually used. **/
+    public CountRange activeCount() {
+        return usesPrimary() ? count : fallbackCount.orElse(count);
     }
 }

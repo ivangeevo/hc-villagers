@@ -1,0 +1,32 @@
+{
+  "guaranteed": [
+    {
+      "buy": {
+        "count": [
+          48,
+          64
+        ],
+        "item": "minecraft:emerald"
+      },
+      "buy_2": {
+        "item": "minecraft:paper"
+      },
+      "sell": {
+        "components": {
+          "infernal_enchanting:arcane_enchantment": {
+            "enchantment": "minecraft:fortune"
+          }
+        },
+        "fallback": "minecraft:enchanted_book",
+        "fallback_components": {
+          "minecraft:stored_enchantments": {
+            "levels": {
+              "minecraft:fortune": 1
+            }
+          }
+        },
+        "item": "infernal_enchanting:arcane_tome"
+      }
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:skeleton_skull",
+      "item": "bwt_hct:runed_skull"
+    },
+    "buy_2": {
+      "count": [
+        6,
+        8
+      ],
+      "item": "minecraft:emerald"
+    },
+    "sell": {
+      "fallback": "minecraft:wither_skeleton_skull",
+      "item": "bwt_hct:infused_skull"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          6,
+          12
+        ],
+        "fallback": "minecraft:bone",
+        "item": "minecraft:skeleton_skull",
+        "required_mod": "btwr"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          6,
+          12
+        ],
+        "fallback": "minecraft:gunpowder",
+        "item": "minecraft:creeper_head",
+        "required_mod": "btwr"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          6,
+          12
+        ],
+        "fallback": "minecraft:rotten_flesh",
+        "item": "minecraft:zombie_head",
+        "required_mod": "btwr"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          6,
+          12
+        ],
+        "fallback": "minecraft:leather",
+        "item": "animageddon:rotten_flesh_block"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          6,
+          12
+        ],
+        "fallback": "minecraft:bone_meal",
+        "item": "animageddon:bone_block",
+        "required_mod": "btwr"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    }
+  ]
+}

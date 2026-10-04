@@ -87,6 +87,8 @@ dependencies {
     modCompileOnly files("libs/btwr_ds-${project.btwr_ds_version}-1.21.1.jar")
     modLocalRuntime files("libs/btwr_ds-${project.btwr_ds_version}-1.21.1.jar")
 
+    modCompileOnly files("libs/infernal-enchanting-1.0.jar")
+    modLocalRuntime files("libs/infernal-enchanting-1.0.jar")
 
 }
 

@@ -1,0 +1,70 @@
+{
+  "level_up": {
+    "buy": {
+      "item": "minecraft:enchanting_table"
+    },
+    "sell": {
+      "count": 2,
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          16,
+          24
+        ],
+        "fallback": "minecraft:wheat",
+        "item": "bwt:hemp"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          10,
+          16
+        ],
+        "item": "minecraft:red_mushroom"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          32,
+          64
+        ],
+        "item": "minecraft:cactus"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:flint_and_steel"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:painting"
+      },
+      "sell": {
+        "count": [
+          2,
+          3
+        ],
+        "item": "minecraft:emerald"
+      }
+    }
+  ]
+}

@@ -31,8 +31,7 @@ import java.util.List;
  * Live updating was dropped on purpose: vanilla does that itself in newer versions.
  */
 public final class HCTradeLogic {
-    /** Effectively unlimited uses for guaranteed trades. */
-    public static final int FIXED_MAX_USES = 999_999;
+
     private static final int REGEN_TICKS = 200;
     private static final byte HAPPY_PARTICLES_STATUS = 14;
 
@@ -437,4 +436,5 @@ public final class HCTradeLogic {
         }
         return new Carry(villager, kept, levels);
     }
+
 }

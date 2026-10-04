@@ -1,0 +1,133 @@
+{
+  "guaranteed": [
+    {
+      "buy": {
+        "fallback": "minecraft:skeleton_skull",
+        "item": "bwt_hct:runed_skull"
+      },
+      "buy_2": {
+        "count": [
+          6,
+          8
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "fallback": "minecraft:wither_skeleton_skull",
+        "item": "bwt_hct:infused_skull"
+      }
+    }
+  ],
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:respawn_anchor",
+      "item": "infernal_enchanting:infernal_enchanter"
+    },
+    "sell": {
+      "count": 4,
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "count": [
+          2,
+          3
+        ],
+        "fallback": "minecraft:soul_sand",
+        "fallback_count": 64,
+        "item": "bwt:soul_urn"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          12,
+          16
+        ],
+        "item": "minecraft:black_candle"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          12,
+          16
+        ],
+        "item": "minecraft:white_candle"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          12,
+          16
+        ],
+        "item": "minecraft:red_candle"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          12,
+          16
+        ],
+        "item": "minecraft:yellow_candle"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          12,
+          16
+        ],
+        "item": "minecraft:blue_candle"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "count": [
+          12,
+          16
+        ],
+        "item": "minecraft:green_candle"
+      },
+      "sell": {
+        "item": "minecraft:emerald"
+      }
+    },
+    {
+      "buy": {
+        "fallback": "minecraft:white_wool",
+        "fallback_count": 64,
+        "item": "bwt:canvas"
+      },
+      "sell": {
+        "count": [
+          2,
+          3
+        ],
+        "item": "minecraft:emerald"
+      }
+    }
+  ]
+}

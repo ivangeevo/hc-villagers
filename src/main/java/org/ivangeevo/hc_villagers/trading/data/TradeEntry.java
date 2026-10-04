@@ -5,10 +5,16 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentType;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.predicate.ComponentPredicate;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntryList;
+import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.entity.Entity;
 import net.minecraft.village.TradeOffer;
@@ -17,6 +23,7 @@ import net.minecraft.village.TradedItem;
 import org.ivangeevo.hc_villagers.HCVillagersMod;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * One trade in JSON:
@@ -45,9 +52,9 @@ public record TradeEntry(TradeItemSpec buy, Optional<TradeItemSpec> buy2, TradeI
             return Optional.empty();
         }
         return Optional.of(new Factory(
-                buyItem.get(), buy.count(), buy,
-                buy2Item.flatMap(item -> item).map(item -> new Factory.Side(item, buy2.get().count(), buy2.get())),
-                sellItem.get(), sell.count(), sell));
+                buyItem.get(), buy.activeCount(), buy,
+                buy2Item.flatMap(item -> item).map(item -> new Factory.Side(item, buy2.get().activeCount(), buy2.get())),
+                sellItem.get(), sell.activeCount(), sell));
     }
 
     private static Optional<Item> resolve(TradeItemSpec spec, String where) {
@@ -71,19 +78,28 @@ public record TradeEntry(TradeItemSpec buy, Optional<TradeItemSpec> buy2, TradeI
         public TradeOffer create(Entity entity, Random random) {
             var lookup = entity.getRegistryManager();
 
-            TradedItem first = traded(buy, buyCount.roll(random, buy.getMaxCount()), buySpec.resolveComponents(lookup));
+            boolean enchanting = sellSpec.enchantLevels().isPresent();
+
+            TradedItem first = traded(buy, buyCount.roll(random, buy.getMaxCount()), buySpec.resolveComponents(lookup), enchanting && buy == sell);
             Optional<TradedItem> second = buy2.map(side ->
-                    traded(side.item(), side.count().roll(random, side.item().getMaxCount()), side.spec().resolveComponents(lookup)));
+                    traded(side.item(), side.count().roll(random, side.item().getMaxCount()), side.spec().resolveComponents(lookup), false));
 
             ItemStack result = new ItemStack(sell, sellCount.roll(random, sell.getMaxCount()));
             result.applyChanges(sellSpec.resolveComponents(lookup));
+
+            sellSpec.enchantLevels().ifPresent(range -> {
+                int level = range.min() + random.nextInt(range.max() - range.min() + 1);
+                var registries = entity.getRegistryManager();
+                var pool = registries.get(RegistryKeys.ENCHANTMENT).getEntryList(EnchantmentTags.ON_TRADED_EQUIPMENT);
+                EnchantmentHelper.enchant(random, result, level, registries, pool);
+            });
 
             return new TradeOffer(first, second, result, 1, 0, PRICE_MULTIPLIER);
         }
 
         /** Buy side: components become a predicate the player's item must match. */
-        private static TradedItem traded(Item item, int count, ComponentChanges changes) {
-            if (changes.isEmpty()) return new TradedItem(item, count);
+        private static TradedItem traded(Item item, int count, ComponentChanges changes, boolean unenchanted) {
+            if (changes.isEmpty() && !unenchanted) return new TradedItem(item, count);
             ComponentMap.Builder builder = ComponentMap.builder();
             for (var entry : changes.entrySet()) {
                 entry.getValue().ifPresent(value -> put(builder, entry.getKey(), value));

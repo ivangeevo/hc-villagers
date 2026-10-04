@@ -21,6 +21,9 @@ public class ItemSpec {
     private CountRange count = CountRange.ONE;
     private final Map<Identifier, JsonElement> components = new LinkedHashMap<>();
     private final Map<Identifier, JsonElement> fallbackComponents = new LinkedHashMap<>();
+    private Optional<CountRange> enchantLevels = Optional.empty();
+    private Optional<String> requiredMod = Optional.empty();
+    private Optional<CountRange> fallbackCount = Optional.empty();
 
     private ItemSpec(Identifier id) {
         this.id = id;
@@ -40,6 +43,12 @@ public class ItemSpec {
 
     public ItemSpec count(int min, int max) {
         this.count = new CountRange(min, max);
+        return this;
+    }
+
+    /** Enchant an item on the sell side **/
+    public ItemSpec enchant(int minLevel, int maxLevel) {
+        this.enchantLevels = Optional.of(new CountRange(minLevel, maxLevel));
         return this;
     }
 
@@ -74,6 +83,21 @@ public class ItemSpec {
         return this;
     }
 
+    /** The primary item only counts if the mod is loaded; otherwise use the fallback **/
+    public ItemSpec requiresMod(String modId) {
+        this.requiredMod = Optional.of(modId);
+        return this;
+    }
+
+    public ItemSpec fallbackCount(int amount) {
+        return fallbackCount(amount, amount);
+    }
+
+    public ItemSpec fallbackCount(int min, int max) {
+        this.fallbackCount = Optional.of(new CountRange(min, max));
+        return this;
+    }
+
     /** For components that can be compiled against (vanilla ones). Encoded to JSON with the component's own codec. */
     public <T> ItemSpec with(ComponentType<T> type, T value) {
         Codec<T> codec = type.getCodecOrThrow();
@@ -83,7 +107,7 @@ public class ItemSpec {
     }
 
     TradeItemSpec build() {
-        return new TradeItemSpec(id, fallback, count, Map.copyOf(components), Map.copyOf(fallbackComponents));
+        return new TradeItemSpec(id, fallback, count, Map.copyOf(components), Map.copyOf(fallbackComponents), enchantLevels, requiredMod, fallbackCount);
     }
 
 }

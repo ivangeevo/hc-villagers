@@ -1,0 +1,322 @@
+{
+  "level_up": {
+    "buy": {
+      "fallback": "minecraft:nether_wart_block",
+      "item": "bwt:arcane_vessel"
+    },
+    "sell": {
+      "count": 2,
+      "item": "minecraft:emerald"
+    }
+  },
+  "random": [
+    {
+      "buy": {
+        "item": "minecraft:iron_helmet"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:iron_helmet"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:iron_chestplate"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:iron_chestplate"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:iron_leggings"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:iron_leggings"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:iron_boots"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:iron_boots"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:iron_pickaxe"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:iron_pickaxe"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:iron_axe"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:iron_axe"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:iron_sword"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:iron_sword"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:diamond_helmet"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:diamond_helmet"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:diamond_chestplate"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:diamond_chestplate"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:diamond_leggings"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:diamond_leggings"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:diamond_boots"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:diamond_boots"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:diamond_pickaxe"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:diamond_pickaxe"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:diamond_axe"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:diamond_axe"
+      }
+    },
+    {
+      "buy": {
+        "item": "minecraft:diamond_sword"
+      },
+      "buy_2": {
+        "count": [
+          2,
+          4
+        ],
+        "item": "minecraft:emerald"
+      },
+      "sell": {
+        "components": {
+          "minecraft:damage": 0
+        },
+        "enchant_levels": [
+          5,
+          19
+        ],
+        "item": "minecraft:diamond_sword"
+      }
+    }
+  ]
+}
